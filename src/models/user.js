@@ -4,6 +4,18 @@
 import { Schema, model, models} from 'mongoose';
 
 const userSchema =  new Schema({
+    /** 
+     * The username of the user
+     */
+    username: {
+        type: String,
+        required: true
+    },
+    /** The Bcrypt hash of the user's password */
+    password_hash: {
+        type: String,
+        required: true
+    },
     /**
      * The coin balance of the user
      */
