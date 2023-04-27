@@ -11,6 +11,9 @@ const modelSchema =  new Schema({
         type: String,
         required: [true, "Model must have name"]
     },
+    /**
+     * The default parameters 
+     */
     parameters: {
         type: Object,
         required: false
