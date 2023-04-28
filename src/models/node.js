@@ -8,7 +8,8 @@ const nodeSchema =  new Schema({
      * The owner of the node
      */
     owner: {
-        type: Schema.Types.ObjectId, ref: 'User',
+        type: Schema.Types.ObjectId, 
+        ref: 'User',
         required: [true, "Node must have owner"]
     },
     /**
