@@ -9,16 +9,6 @@ const bs58check = require('bs58check');
  * @class KeyPair
  */
 class KeyPair {
-    
-    /**
-     * Initialize KeyPair
-     */
-    init() {
-        return new Promise((resolve, reject) => {
-            this.generateAddress().then(resolve).catch(reject)
-        })
-    }
-
     /**
      * Load from already exist keypair
      * @param {KeyObject} publicKey existing public key
@@ -45,12 +35,13 @@ class KeyPair {
             });
             this.privateKey = privateKey.export({type: 'pkcs8', format: 'der'});
             this.publicKey = publicKey.export({type: 'spki', format: 'der'});
+            resolve();
         })
     }
 
     /**
      * Generates an encoded address from the wallet's public key
-     * @returns 
+     * @returns {Promise}
      */
     generateAddress() {
         return new Promise((resolve, reject) => {
@@ -72,17 +63,27 @@ class KeyPair {
     /**
      * Proof of Work Hash
      */
-    generatePOWHash() {
+    generateNonce() { 
         return new Promise((resolve, reject) => {
-            
+            var nonce = 0;
+            var hash;
+            while(true) {
+                hash = crypto.createHash('sha256').update(this.publicKey + nonce.toString()).digest();
+                if(hash.slice(0,3) == '000') {
+                    console.log(nonce);
+                    this.nonce = nonce;
+                }
+                nonce++;
+            }
         })
     }
 }
 
 async function a() {
     const b = new KeyPair();
-    await b.init();
-    console.log(b)
+    b.generateKeyPair().then(b.generateNonce().then(() => {
+        console.log(b)
+    }))
 }
 
 a();
