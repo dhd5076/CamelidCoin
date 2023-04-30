@@ -48,19 +48,29 @@ class KeyPair {
                 namedCurve: 'secp256k1'
             });
             this.privateKey = privateKey.export({type: 'pkcs8', format: 'der'});
+            this.privateKeyPEM = privateKey.export({type: 'pkcs8', format: 'pem'});
+
             this.publicKey = publicKey.export({type: 'spki', format: 'der'});
+            this.publicKeyPEM = publicKey.export({type: 'spki', format: 'pem'});
             resolve();
         })
     }
 
     /**
-     * Get 
+     * Get public key
+     * @param {String} format The format to get the key in
      * @returns {Promise.<Number, Error>} Returns the public key if resolved
      */
     getPublicKey() {
         return new Promise((resolve, reject) => {
             if(this.privateKey != undefined) {
-                resolve(this.publicKey)
+                if(format == 'der') {
+                    resolve(this.publicKey)
+                } else if(format == 'pem') {
+                    resolve(this.publicKeyPEM)
+                } else {
+                    reject(new Error("Incorrect format supplied"))
+                }
             } else {
                 reject(new Error("No key has been generated"))
             }
@@ -68,22 +78,29 @@ class KeyPair {
     }
 
     /**
-     * Get Private Key
-     * @returns {Promise.<Key, Error>} Returns the private key if resolved
-     */ 
+     * Get public key
+     * @param {String} format The format to get the key in
+     * @returns {Promise.<Number, Error>} Returns the public key if resolved
+     */
     getPrivateKey() {
         return new Promise((resolve, reject) => {
             if(this.privateKey != undefined) {
-                resolve(this.privateKey)
+                if(format == 'der') {
+                    resolve(this.privateKey)
+                } else if(format == 'pem') {
+                    resolve(this.privateKeyPEM)
+                } else {
+                    reject(new Error("Incorrect format supplied"))
+                }
             } else {
                 reject(new Error("No key has been generated"))
             }
-        })
+        });
     }
 
     /**
      * Generates an encoded address from the wallet's public key
-     * @returns {Promise.<null, Error>}
+     * @returns {Promise.<String, Error>} A Base58 representation of the generated address
      */
     generateAddress() {
         return new Promise((resolve, reject) => {
@@ -129,15 +146,13 @@ class KeyPair {
      */
     signMessage(message) {
         return new Promise((resolve, reject) => {
-            const sign = crypto.createSign('SHA256').update(message).end();
-            const signature = sign.sign(this.privateKey, 'base64')
-            resolve(signature)
+            const sign = crypto.createSign('SHA256');
+            sign.update(message);
+            const signature = sign.sign(this.privateKeyPEM, 'base64')
+            resolve(signature)  
         });
     }
 }
-
-var a = new KeyPair()
-a = 
 
 module.exports = {
     KeyPair
