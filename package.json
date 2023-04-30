@@ -1,21 +1,22 @@
 {
   "name": "dmlct",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "version": "1.0.0",
+  "description": "A project with the goal to safely and securely incentivise an ad-hoc network by connecting paying clients with compute jobs with paid compute nodes.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
   },
-  "dependencies": {
-    "autoprefixer": "10.4.14",
-    "eslint": "8.39.0",
-    "eslint-config-next": "13.3.1",
-    "next": "13.3.1",
-    "postcss": "8.4.23",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "3.3.1"
-  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhd5076/DMLCT.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dhd5076/DMLCT/issues"
+  },
+  "homepage": "https://github.com/dhd5076/DMLCT#readme"
 }
