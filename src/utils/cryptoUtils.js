@@ -2,29 +2,21 @@
  * @module CryptoUtils Provides utilities for handling crypto functions
  * **/
 const crypto = require('crypto')
+const bs58check = require('bs58check');
 
 /**
  * Used for storing a key pair
  * @class KeyPair
  */
 class KeyPair {
+    
     /**
-     * Creates a new KeyPair object, optionally with existing key pairs
-     * @param {PublicKey} publicKey the private key to use
-     * @param {PrivateKey} privateKey the public key to use
+     * Initialize KeyPair
      */
-    constructor(publicKey, privateKey) {
-        if(publicKey != undefined && privateKey != undefined) {
-            this.fromExistingPair(publicKey, privateKey)
-                .catch((error) => {
-                throw error;
-            })
-        } else {
-            this.generateKeyPair()
-                .catch((error) => {
-                throw error;
-            })
-        }
+    init() {
+        return new Promise((resolve, reject) => {
+            this.generateAddress().then(resolve).catch(reject)
+        })
     }
 
     /**
@@ -51,11 +43,49 @@ class KeyPair {
             const { privateKey, publicKey} = await crypto.generateKeyPairSync('ec', {
                 namedCurve: 'secp256k1'
             });
-            this.privateKey = privateKey;
-            this.publicKey = publicKey;
+            this.privateKey = privateKey.export({type: 'pkcs8', format: 'der'});
+            this.publicKey = publicKey.export({type: 'spki', format: 'der'});
+        })
+    }
+
+    /**
+     * Generates an encoded address from the wallet's public key
+     * @returns 
+     */
+    generateAddress() {
+        return new Promise((resolve, reject) => {
+            const sha256Hash = crypto.createHash('sha256').update(this.publicKey).digest();
+            const ripemd160Hash = crypto.createHash('ripemd160').update(sha256Hash).digest();
+            const version = Buffer.from('00', 'hex')
+            const hashedPublicKey = Buffer.concat([version, ripemd160Hash])
+            const doubleHash = crypto.createHash('sha256').update(
+                crypto.createHash('sha256').update(hashedPublicKey).digest()
+            ).digest();
+
+            const checksum = doubleHash.slice(0, 4);
+
+            const rawAddress = Buffer.concat([hashedPublicKey, checksum]);
+            resolve(bs58check.encode(rawAddress));
+        })
+    }
+
+    /**
+     * Proof of Work Hash
+     */
+    generatePOWHash() {
+        return new Promise((resolve, reject) => {
+            
         })
     }
 }
+
+async function a() {
+    const b = new KeyPair();
+    await b.init();
+    console.log(b)
+}
+
+a();
 
 module.exports = {
     KeyPair
