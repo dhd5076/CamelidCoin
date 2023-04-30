@@ -79,15 +79,6 @@ class KeyPair {
     }
 }
 
-async function a() {
-    const b = new KeyPair();
-    b.generateKeyPair().then(b.generateNonce().then(() => {
-        console.log(b)
-    }))
-}
-
-a();
-
 module.exports = {
     KeyPair
 }
