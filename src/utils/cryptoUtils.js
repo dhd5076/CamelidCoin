@@ -130,9 +130,9 @@ class KeyPair {
             while(true) {
                 hash = crypto.createHash('sha256').update(this.publicKey + nonce.toString()).digest();
                 if(hash.slice(0,3) == '000') {
-                    console.log(nonce);
                     this.nonce = nonce;
                     resolve()
+                    return;
                 }
                 nonce++;
             }
