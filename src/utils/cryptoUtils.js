@@ -6,14 +6,28 @@ const bs58check = require('bs58check');
 
 /**
  * Used for storing a key pair
- * @class KeyPair
+ * @class
  */
 class KeyPair {
+
+
+    /**
+     * Check whether or not a signature is valid
+     * @param message The message to verify
+     * @param signature The signature to verify
+     * @returns {Promise.<boolean>}
+     */
+    static verifySignature(message, signature) {
+        return new Promise((resolve, reject) => {
+
+        })
+    }
+
     /**
      * Load from already exist keypair
      * @param {KeyObject} publicKey existing public key
      * @param {KeyObject} privateKey existing private key
-     * @returns {Promise}
+     * @returns {Promise.<null, Error>}
      */
     fromExistingPair(publicKey, privateKey) {
         return new Promise((resolve, reject) => {
@@ -26,7 +40,7 @@ class KeyPair {
 
     /**
      * Generates a new keypair
-     * @returns {Promise}
+     * @returns {Promise.<null, Error>}
      */
     generateKeyPair() {
         return new Promise(async (resolve, reject) => {
@@ -40,8 +54,36 @@ class KeyPair {
     }
 
     /**
+     * Get 
+     * @returns {Promise.<Number, Error>} Returns the public key if resolved
+     */
+    getPublicKey() {
+        return new Promise((resolve, reject) => {
+            if(this.privateKey != undefined) {
+                resolve(this.publicKey)
+            } else {
+                reject(new Error("No key has been generated"))
+            }
+        });
+    }
+
+    /**
+     * Get Private Key
+     * @returns {Promise.<Key, Error>} Returns the private key if resolved
+     */ 
+    getPrivateKey() {
+        return new Promise((resolve, reject) => {
+            if(this.privateKey != undefined) {
+                resolve(this.privateKey)
+            } else {
+                reject(new Error("No key has been generated"))
+            }
+        })
+    }
+
+    /**
      * Generates an encoded address from the wallet's public key
-     * @returns {Promise}
+     * @returns {Promise.<null, Error>}
      */
     generateAddress() {
         return new Promise((resolve, reject) => {
@@ -62,6 +104,7 @@ class KeyPair {
 
     /**
      * Proof of Work Hash
+     * @returns {Promise.<null, Error>}
      */
     generateNonce() { 
         return new Promise((resolve, reject) => {
@@ -72,12 +115,29 @@ class KeyPair {
                 if(hash.slice(0,3) == '000') {
                     console.log(nonce);
                     this.nonce = nonce;
+                    resolve()
                 }
                 nonce++;
             }
         })
     }
+
+    /**
+     * Sign a message with private key
+     * @param {String} message The message to sign
+     * @returns {Promise.<string, Error>} Returns the generated signature if resolved
+     */
+    signMessage(message) {
+        return new Promise((resolve, reject) => {
+            const sign = crypto.createSign('SHA256').update(message).end();
+            const signature = sign.sign(this.privateKey, 'base64')
+            resolve(signature)
+        });
+    }
 }
+
+var a = new KeyPair()
+a = 
 
 module.exports = {
     KeyPair
