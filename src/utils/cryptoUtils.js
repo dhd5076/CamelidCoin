@@ -15,11 +15,16 @@ class KeyPair {
      * Check whether or not a signature is valid
      * @param message The message to verify
      * @param signature The signature to verify
+     * @param publicKey The public key in PEM format that was used to sign the message
      * @returns {Promise.<boolean>}
      */
-    static verifySignature(message, signature) {
+    static verifySignature(message, signature, publicKey) {
         return new Promise((resolve, reject) => {
-
+            const verify = crypto.createVerify('SHA256');
+            verify = crypto.createVerify('SHA256');
+            verify.update(message);
+            verify.end()
+            const isVerified = verify.verify(publicKey, signature)
         })
     }
 
