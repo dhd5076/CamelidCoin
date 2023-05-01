@@ -1,30 +1,80 @@
+/**
+ * @module Network Used for handling sending and recieving data
+ */
 const net = require('net');
 
 /**
- * @class Client
- * The TCP client that connects to the server
+ * @class Node Client
+ * The TCP client for connecting to nearby nodes
  */
-class Client {
+export class Node {
     /**
      * Create a new socket instance
-     * @param {String} address The address of the distributor 
+     * @param {Peer[]} seedPeers seed peers for creating initial connections
      */
-    constructor(address) {
-        const socket = new net.Socket();
-        socket.connect(8080, address, () => {
-            console.log('Connected to server');
-        })
-        this.address = address;
-        this.socket = client;
+    constructor(seedPeers) {
+        this.seedPeers = seedPeers;
+        this.peers = [];
     }
 
     /**
-     * Send a message to distributor
+     * Initialize Client
+     */
+    init() {
+        return new Promise((resolve, reject) => {
+
+            const server = net.createServer((socket) => {
+
+            })
+
+            this.seedPeers.forEach(peer => {
+                const connection = net.createConnection({
+                    host: peer.address,
+                    port: peer.port
+                });
+                connection.on('connect', () => {
+                    peer.connection = connection;
+                    this.peers.push(peer);
+                    this.handleConnection(connection)
+                })
+                connection.on('error', (error) => {
+                    console.error(`Error connecting to peer ${peer.address}:${peer.port}: ${error.message}`);
+                })
+                peer.connection = connection;
+            })
+        })
+    }
+
+    /**
+     * Handle incoming connections
+     * @param {net.Socket} connection 
+     */
+    handleConnection(connection) {
+        console.log('New connection from', connection.remoteAddress);
+
+        connection.on('data', (data) => {
+            const message = JSON.parse(data.toString());
+            // TODO: Handle message
+        });
+
+        connection.on('close', () => {
+            this.peers = this.peers.filter(peer => peer.connection !== connection);
+        });
+
+        connection.on('error', (err) => {
+            //TODO: Handle error
+        });
+    }
+
+    /**
+     * Broadcast message to peers
      * @param {Message} message 
      */
     sendMessage(message) {
-
+        return new Promise((resolve, reject) => {
+            this.peers.forEach(peer => {
+                
+            })
+        })
     }
 }
-
-this.exports = Client;

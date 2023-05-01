@@ -23,6 +23,7 @@ export class Model {
 
     /**
      * Load and initialized model
+     * @returns {Promise.<null, Error>}
      */
     init() {
         return new Promise(async (resolve, reject) => {
@@ -50,7 +51,7 @@ export class Model {
                 topK: 40,
                 repeatPenalty: 1,
                 repeatLastN: 64,
-                seed: 0,
+                seed: seed,
                 feedPrompt: true,
             }, (response) => {
                 console.log(completition)
