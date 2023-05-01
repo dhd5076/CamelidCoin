@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/dhd5076/DMLCT#readme",
   "dependencies": {
+    "@llama-node/core": "^0.0.33",
+    "@llama-node/llama-cpp": "^0.0.33",
     "base58check": "^2.0.0",
-    "bs58check": "^3.0.1"
+    "bs58check": "^3.0.1",
+    "llama-node": "^0.0.33"
   }
 }
