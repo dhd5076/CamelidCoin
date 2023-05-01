@@ -21,13 +21,13 @@ export class Node {
      * Initialize Client
      */
     init() {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
 
-            const server = net.createServer((connection) => {
+            const server = await net.createServer((connection) => {
                 this.handleConnection(connection);
             })
 
-            this.seedPeers.forEach(peer => {
+            await this.seedPeers.forEach(peer => {
                 const connection = net.createConnection({
                     host: peer.address,
                     port: peer.port
@@ -40,6 +40,7 @@ export class Node {
                 })
                 peer.connection = connection;
             })
+            resolve();
         })
     }
 
