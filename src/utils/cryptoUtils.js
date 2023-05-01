@@ -4,12 +4,31 @@
 const crypto = require('crypto')
 const bs58check = require('bs58check');
 
+
+/**
+ * Returns the hash of the given data using SHA256
+ * @param {string} data The data to hash
+ * @returns {Promise<string>} A Promise that resolves to the hash value as a string
+ */
+export function getHash(data) {
+    return new Promise((resolve, reject) => {
+      const hash = crypto.createHash('SHA256');
+      hash.update(data);
+      hash.digest('hex', (err, hash) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(hash);
+        }
+      });
+    });
+  }
+
 /**
  * Used for storing a key pair
  * @class
  */
-class KeyPair {
-
+export class KeyPair {
 
     /**
      * Check whether or not a signature is valid
@@ -150,7 +169,7 @@ class KeyPair {
      * @param {String} message The message to sign
      * @returns {Promise.<string, Error>} Returns the generated signature if resolved
      */
-    signMessage(message) {
+    sign(message) {
         return new Promise((resolve, reject) => {
             const sign = crypto.createSign('SHA256');
             sign.update(message);
@@ -158,8 +177,4 @@ class KeyPair {
             resolve(signature)  
         });
     }
-}
-
-module.exports = {
-    KeyPair
 }

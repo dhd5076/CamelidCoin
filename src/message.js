@@ -6,9 +6,9 @@
  * @class Message
  */
 export class Message {
-    constructor(command, payload) {
+    constructor(type, payload) {
         //TODO: Assign random identifier
-        this.command = command;
+        this.type = type;
         this.payload = payload;
     }
 
