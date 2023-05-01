@@ -23,8 +23,8 @@ export class Node {
     init() {
         return new Promise((resolve, reject) => {
 
-            const server = net.createServer((socket) => {
-
+            const server = net.createServer((connection) => {
+                this.handleConnection(connection);
             })
 
             this.seedPeers.forEach(peer => {
@@ -33,8 +33,6 @@ export class Node {
                     port: peer.port
                 });
                 connection.on('connect', () => {
-                    peer.connection = connection;
-                    this.peers.push(peer);
                     this.handleConnection(connection)
                 })
                 connection.on('error', (error) => {
@@ -52,6 +50,7 @@ export class Node {
     handleConnection(connection) {
         console.log('New connection from', connection.remoteAddress);
 
+        //TODO: Implement a way to create new Peers when applicable and assign connection objects to them
         connection.on('data', (data) => {
             const message = JSON.parse(data.toString());
             // TODO: Handle message

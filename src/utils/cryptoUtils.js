@@ -24,7 +24,8 @@ class KeyPair {
             verify = crypto.createVerify('SHA256');
             verify.update(message);
             verify.end()
-            const isVerified = verify.verify(publicKey, signature)
+            const isVerified = verify.verify(publicKey, signature);
+            resolve(isVerified);
         })
     }
 
