@@ -38,29 +38,29 @@ export class Model {
      * @param {Number} tokens Number of tokens to compute
      */
     generateCompletition(prompt, seed, tokens) {
-        var count = 0;
-        var completition = [];
-        this.config.seed = seed;
-        this.model.createCompletion({
-            prompt,
-            numPredict: tokens,
-            temp: 0.2,
-            topP: 1,
-            topK: 40,
-            repeatPenalty: 1,
-            repeatLastN: 64,
-            seed: 0,
-            feedPrompt: true,
-        }, (response) => {
-            count++;
-            completition.push(response.token)
-            console.log(completition)
+        return new Promise((resolve, reject) => {
+            var count = 0;
+            var completition = [];
+            this.config.seed = seed;
+            this.model.createCompletion({
+                prompt,
+                numPredict: tokens,
+                temp: 0.2,
+                topP: 1,
+                topK: 40,
+                repeatPenalty: 1,
+                repeatLastN: 64,
+                seed: 0,
+                feedPrompt: true,
+            }, (response) => {
+                console.log(completition)
+                if(response.token == '\n\n<end>\n') {
+                    resolve(completition)
+                    return;
+                } else{
+                    completition.push(response.token)
+                }
+            })  
         })
     }
 }
-
-let a = new Model("ggml-alpaca-7b-q4.bin");
-a.init()
-.then(() => {
-    a.generateCompletition("A dialog, where User interacts with AI. AI is helpful, kind, obedient, honest, and knows its own limits. \n User: Hello, AI. \n AI: Hello! How can I assist you today? \n User: How are you doing today? AI:", 1, 32)
-})
