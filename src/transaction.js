@@ -8,22 +8,26 @@ import { KeyPair } from './utils/cryptoUtils';
  * @class Transcation
  */
 export class Transcation {
-    constructor(fromAddress, toAddress, amount, fee) {
+    constructor(fromAddress, toAddress, amount, fee, fromSignature) {
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
         this.fee = fee;
         this.amount = amount;
-        this.identified = 
+        this.fromSignature = fromSignature;
     }
 
     /**
      * Signs a transcation with a given keypair
-     * @param {KeyPair} keyPair 
+     * @param {KeyPair} keyPair
+     * @returns {Promise.<null>} 
      */
     sign(keyPair) {
-        const data = JSON.stringify(this);
-        const signature = keyPair.sign(data);
-        this.signature = signature;
+        return new Promise((resolve, reject) => {
+            const data = JSON.stringify(this);
+            const signature = keyPair.sign(data);
+            this.fromSignature = signature;
+            resolve();
+        })
     }   
 
     verify(publicKey) {
@@ -31,10 +35,10 @@ export class Transcation {
             const data = JSON.stringify(this);
             KeyPair.verifySignature(publicKey, data)
             .then((isVerified) => {
-                resolve(isVerified)
+                resolve(isVerified);
             })
             .catch((error) => {
-                reject(error)
+                reject(error);
             })
         })
     }
