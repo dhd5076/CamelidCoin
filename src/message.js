@@ -93,7 +93,7 @@ export class MessageHandler {
             const messageObj = new Message(message.type, message.payload);
             handler(messageObj);
             if(this.shouldForward(message)) {
-                this.sendMessage(message);
+                this.sendMessage(message, this.sendMessage);
             }
             resolve();
         });

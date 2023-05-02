@@ -14,7 +14,7 @@ export class Client {
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      */
     constructor(seedPeers) {
-        this.messageHandler = new MessageHandler();
+        this.messageHandler = new MessageHandler(this.sendMessage);
         this.messageHandler.registerHandler('')
         if(seedPeers != null) {
             this.seedPeers = seedPeers;
@@ -26,9 +26,9 @@ export class Client {
 
     /**
      * Handles GetPeers command
-     * @param {*} message 
+     * @param {Message} message message to send 
      */
-    handleGetPeersMessage(message) {
+    handleGetPeersMessage() {
         
     }
 
