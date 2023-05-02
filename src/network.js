@@ -1,20 +1,35 @@
 /**
  * @module Network Used for handling sending and recieving data
  */
-const net = require('net');
+import net from 'net'
+import { Message, MessageHandler } from './message';
 
 /**
  * @class Node Client
  * The TCP client for connecting to nearby nodes
  */
-export class Node {
+export class Client {
     /**
      * Create a new socket instance
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      */
     constructor(seedPeers) {
-        this.seedPeers = seedPeers;
-        this.peers = [];
+        this.messageHandler = new MessageHandler();
+        this.messageHandler.registerHandler('')
+        if(seedPeers != null) {
+            this.seedPeers = seedPeers;
+            this.peers = [];
+        } else {
+            throw new Error("Seed peers are required for client instance");
+        }
+    }
+
+    /**
+     * Handles GetPeers command
+     * @param {*} message 
+     */
+    handleGetPeersMessage(message) {
+        
     }
 
     /**
@@ -25,6 +40,10 @@ export class Node {
 
             const server = await net.createServer((connection) => {
                 this.handleConnection(connection);
+            })
+
+            server.listen(8080, () => {
+                console.log("Listening for incoming connections");
             })
 
             await this.seedPeers.forEach(peer => {
@@ -49,12 +68,8 @@ export class Node {
      * @param {net.Socket} connection 
      */
     handleConnection(connection) {
-        console.log('New connection from', connection.remoteAddress);
-
-        //TODO: Implement a way to create new Peers when applicable and assign connection objects to them
         connection.on('data', (data) => {
-            const message = JSON.parse(data.toString());
-            // TODO: Handle message
+            this.messageHandler.handleMessage(Message.fromBuffer(data));
         });
 
         connection.on('close', () => {
@@ -62,7 +77,7 @@ export class Node {
         });
 
         connection.on('error', (err) => {
-            //TODO: Handle error
+            throw new Error(error);
         });
     }
 
@@ -78,3 +93,9 @@ export class Node {
         })
     }
 }
+
+const a = new Client([{
+    host: 'localhost',
+    port: 8080
+}]);
+a.init();
