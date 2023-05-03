@@ -26,10 +26,10 @@ export class Client {
 
     /**
      * Handles GetPeers command
-     * @param {Message} message message to send 
      */
-    handleGetPeersMessage() {
-        
+    handleGetPeersMessage(message, reply) {
+        const message = new Message('')
+        //TODO: Implement replying to user with list of peers
     }
 
     /**
@@ -69,7 +69,7 @@ export class Client {
      */
     handleConnection(connection) {
         connection.on('data', (data) => {
-            this.messageHandler.handleMessage(Message.fromBuffer(data));
+            this.messageHandler.handleMessage(Message.fromBuffer(data), sender);
         });
 
         connection.on('close', () => {

@@ -74,24 +74,23 @@ export class MessageHandler {
 
     /**
      * Handle an incoming message
-     * @param {Object} message - the incoming message
+     * @param {Message} message - the incoming message
+     * @param {function} reply - send message back to sender
      * @returns {Promise.<null>} A Promise that resolves when the message has been handled successfully
      * and rejects if there's an error
      */
-    handleMessage(message) {
+    handleMessage(message, reply) {
         return new Promise((resolve, reject) => {
             if (!message || !message.type) {
                 reject(new Error('Invalid message object'));
             }
-        
+
             const handler = this.handlers.get(message.type);
             if (!handler) {
                 //TODO: handle this for invalid message types
                 reject(new Error(`No handler registered for message type ${message.type}`));
-            }
-        
-            const messageObj = new Message(message.type, message.payload);
-            handler(messageObj);
+            };
+            handler(message, reply);
             if(this.shouldForward(message)) {
                 this.sendMessage(message, this.sendMessage);
             }
