@@ -2,7 +2,7 @@
  * @module Network Used for handling sending and recieving data
  */
 import net from 'net'
-import { Message, MessageHandler } from './message';
+import { Message, MessageHandler } from './message.js';
 
 /**
  * @class Node Client
@@ -11,6 +11,7 @@ import { Message, MessageHandler } from './message';
 export class Client {
     /**
      * Create a new socket instance
+     * @param {Number} port starting port
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      */
     constructor(seedPeers) {
@@ -28,7 +29,7 @@ export class Client {
      * Handles GetPeers command
      */
     handleGetPeersMessage(message, reply) {
-        const message = new Message('')
+        ///const message = new Message('')
         //TODO: Implement replying to user with list of peers
     }
 
@@ -42,7 +43,7 @@ export class Client {
                 this.handleConnection(connection);
             })
 
-            server.listen(8080, () => {
+            server.listen(0, () => {
                 console.log("Listening for incoming connections");
             })
 
@@ -94,8 +95,14 @@ export class Client {
     }
 }
 
-const a = new Client([{
+const a = new Client(255, [{
     host: 'localhost',
-    port: 8080
-}]);
+    port:256
+}])
 a.init();
+
+const b = new Client(256, [{
+    host: 'localhost',
+    port: 255
+}]);
+b.init();
