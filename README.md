@@ -1,3 +1,3 @@
-## Decentralized Large Language Model Computing and Training
+## CamelidCoin
 
-A project with the goal to safely and securely incentivise an ad-hoc network by connecting paying clients with compute jobs with paid compute nodes. 
+A decentralized blockchain-based network for distributed computing of a variety of GPT based LLM's
