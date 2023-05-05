@@ -2,7 +2,7 @@
  * @module Block used for handling blocks
  */
 
-import {Transaction} from './transaction';
+import {Transaction, Transcation} from './transaction';
 
 const creationReward = 0;
 
@@ -29,15 +29,6 @@ class Block {
      */
     getMerkleRoot() {
 
-    }
-
-    /**
-     * 
-     */
-    createTransaction() {
-        return new Promise((resolve, reject) => {
-
-        })
     }
 
     /**
