@@ -4,23 +4,70 @@
 
 import {Transaction} from './transaction';
 
+const creationReward = 0;
+
 class Block {
-    constructor(transcations, previousHash) {
-        //Merkle root, when brain isnt tired
-        this.timestamp = new Date();
-        this.transactions = transactions;
+    constructor(index, previousHash, timestamp, transactions, nonce) {
+        this.index = index;
         this.previousHash = previousHash;
-        this.hash = "";
-        this.nonce = 0;
+        this.timestamp = timestamp;
+        this.transactions = transactions;
+        this.nonce = nonce;
+        //this.merkleRoot implement later on to allow lightweight nodes
+        this.hash = calculateHash();
     }
 
     /**
-     * Initialize the block, not done with contructor because init is not instant.
+     * 
      */
-    init() {
+    getMerkleProof() {
+
+    }
+
+    /**
+     * 
+     */
+    getMerkleRoot() {
+
+    }
+
+    /**
+     * 
+     */
+    createTransaction() {
         return new Promise((resolve, reject) => {
-            this.hash = calculateHash();
-            resolve();
+
+        })
+    }
+
+    /**
+     * 
+     */
+    createInput() {
+        return new Promise((resolve, reject) => {
+
+        })
+    }
+
+    /**
+     * 
+     */
+    validate() {
+        return new Promise((resolve, reject) => {
+
+        })
+    }
+
+
+    /**
+     * 
+     */
+    getGenesis() {
+        return new Promise((resolve, reject) => {
+            const genesis  = new Block(
+                //Genesis data
+            );
+            genesis.hash = this.calculateHash(block)
         })
     }
 
@@ -55,9 +102,5 @@ class Block {
               }
               resolve(false)
         })
-    }
-
-    validate() {
-
     }
 }

@@ -8,12 +8,16 @@ import { KeyPair } from './utils/cryptoUtils';
  * @class Transcation
  */
 export class Transcation {
-    constructor(fromAddress, toAddress, amount, fee, fromSignature) {
-        this.fromAddress = fromAddress;
-        this.toAddress = toAddress;
-        this.fee = fee;
-        this.amount = amount;
-        this.fromSignature = fromSignature;
+
+    /**
+     * Create a new transcation
+     * @param {*} input 
+     * @param {*} output 
+     */
+    create(from, to, ) {
+        return new Promise((resolve, reject) => {
+
+        })
     }
 
     /**
