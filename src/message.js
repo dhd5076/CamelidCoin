@@ -8,9 +8,9 @@
 export class Message {
     /**
      * Create a new messagfe
-     * @param {*} type 
-     * @param {*} subtype 
-     * @param {*} payload 
+     * @param {String} type Represents 
+     * @param {String} subtype 
+     * @param {object} payload 
      */
     constructor(type, subtype, payload) {
         //TODO: Assign random identifier
@@ -66,7 +66,9 @@ export class MessageHandler {
      * @param {function} handler - the callback to handle the message
      */
     registerHandler(type, handler) {
-        this.handles.set(type, handler);
+        return new Promise((resolve, reject) => {
+            this.handles.set(type, handler);
+        })
     }
 
     /**

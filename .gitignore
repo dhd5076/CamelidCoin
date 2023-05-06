@@ -12,6 +12,15 @@
 /.next/
 /out/
 
+#model
+/model
+
+#latex
+*.aux
+*.log
+*.pdf
+
+
 # production
 /build
 
