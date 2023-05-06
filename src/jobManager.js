@@ -3,6 +3,7 @@
  */
 
 import { MessageHandler, Message } from "./message";
+import { Job } from './job';
 
 /**
  * Used for managing scheduling and managing jobs
@@ -15,6 +16,15 @@ export class JobManager {
     this.jobs = new Map();
     this.acceptingJobs = true;
     messageHandler.registerHandler('JOB', this.handleMessage);
+  }
+
+  /**
+   * creates a new computation job and broadcasts it to the network
+   * @param job 
+   */
+  createAndTransmit(job, keypair) {
+    job.state = STATE.CREATED;
+
   }
 
   /**
@@ -116,10 +126,4 @@ export class JobManager {
     })
   }
 
-}
-
-const STATE = {
-  CREATED: 1,
-  PICKEDUP: 2,
-  COMPLETED: 3
 }

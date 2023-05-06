@@ -68,6 +68,7 @@ export class MessageHandler {
     registerHandler(type, handler) {
         return new Promise((resolve, reject) => {
             this.handles.set(type, handler);
+            resolve();
         })
     }
 
