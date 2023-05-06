@@ -113,11 +113,26 @@ export class JobScheduler {
    * Remove a job from the job pool
    */
   removeJob(id) {
-    this.jobs.delete(id)
+    return new Promise((resolve, reject) => {
+      if(this.jobs.has(id)) {
+        this.jobs.delete(id)
+      } else {
+        reject(new Error(`Job doesn't exist`))
+      }
+    });
   }
 
-  updateJob() {
-
+  /**
+   * Replace job with new job
+   * @param {*} id 
+   * @param {Job} job 
+   */
+  updateJob(id, job) {
+    return new Promise((resolve, reject) => {
+      if(this.jobs.has(id)) {
+        this.jobs.set(id, job)
+      }
+    })
   }
 
   /**
@@ -150,5 +165,9 @@ export class JobScheduler {
       }
     })
   }
+
+}
+
+JOB_STATES = {
 
 }
