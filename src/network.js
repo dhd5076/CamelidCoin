@@ -17,7 +17,7 @@ export class Client {
      */
     constructor(seedPeers) {
         this.messageHandler = new MessageHandler(this.sendMessage);
-        this.jobScheduler = new JobScheduler(this.messageHandler)
+        this.jobManager = new JobManager(this.messageHandler)
         this.messageHandler.registerHandler('')
         if(seedPeers != null) {
             this.seedPeers = seedPeers;
@@ -91,9 +91,11 @@ export class Client {
     sendMessage(message) {
         return new Promise((resolve, reject) => {
             this.peers.forEach(peer => {
-                
-            })
-        })
+                const socket = peer.connection;
+                socket.write(message.toBuffer());
+            });
+            resolve();
+        });
     }
 }
 
