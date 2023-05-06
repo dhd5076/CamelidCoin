@@ -2,7 +2,8 @@
  * @module Network Used for handling sending and recieving data
  */
 import net from 'net'
-import { Message, MessageHandler } from './message.js';
+import { JobManager } from './jobManager';
+import { Message, MessageHandler } from './message';
 
 /**
  * @class Node Client
@@ -16,6 +17,7 @@ export class Client {
      */
     constructor(seedPeers) {
         this.messageHandler = new MessageHandler(this.sendMessage);
+        this.jobScheduler = new JobScheduler(this.messageHandler)
         this.messageHandler.registerHandler('')
         if(seedPeers != null) {
             this.seedPeers = seedPeers;

@@ -6,21 +6,18 @@
  * @class Message
  */
 export class Message {
-    constructor(type, payload) {
+    /**
+     * Create a new messagfe
+     * @param {*} type 
+     * @param {*} subtype 
+     * @param {*} payload 
+     */
+    constructor(type, subtype, payload) {
         //TODO: Assign random identifier
         this.type = type;
+        this.subtype = subtype;
         this.payload = payload;
     }
-
-    /**
-     * Determines whether or not a message should be forwarded to neighbor nodes
-     * @returns {Promise.<boolean>}
-     */
-    shouldForward() {
-        return true;
-        //TODO: Determine whether or not to broadcast message to
-    }
-
 
     /**
      * Serialize the message into a Buffer
