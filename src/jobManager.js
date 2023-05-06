@@ -15,16 +15,9 @@ export class JobManager {
   constructor(messageHandler) {
     this.jobs = new Map();
     this.acceptingJobs = true;
-    messageHandler.registerHandler('JOB', this.handleMessage);
-  }
-
-  /**
-   * creates a new computation job and broadcasts it to the network
-   * @param job 
-   */
-  createAndTransmit(job, keypair) {
-    job.state = STATE.CREATED;
-
+    messageHandler.registerHandler('JOB_NEW', this.handleNewJobMessage);
+    messageHandler.registerHandler('JOB_ACCEPTED', this.handleJobAcceptedMessage);
+    messageHandler.registerHandler('JOB_COMPLETED', this.handleJobCompletedMessage);
   }
 
   /**
@@ -35,6 +28,10 @@ export class JobManager {
     return new Promise((resolve, reject) => {
       if(this.acceptingJobs) {
         this.currentJob = job;
+        this.acceptingJobs = false;
+        resolve();
+      } else {
+        reject(new Error("Not accepting new jobs."))
       }
     })
   } 
