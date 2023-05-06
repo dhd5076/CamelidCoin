@@ -1,4 +1,10 @@
 /**
+ * @module Job used for creating and managing jobs
+ */
+
+import { MessageHandler, Message } from "./message";
+
+/**
  * @class Job
  */
 export class Job {
@@ -33,10 +39,12 @@ export class Job {
     }
 
     /**
-     * Verify job is correct
+     * 
      */
-    verify() {
+    static validate() {
+      return new Promise((resolve, reject) +> {
 
+      })
     }
 
     /**
@@ -49,4 +57,98 @@ export class Job {
     getHash() {
 
     }
+}
+
+/**
+ * Used for managing scheduling and managing jobs
+ */
+export class JobScheduler {
+  /**
+   * @param {MessageHandler} messageHandler used for sending messages
+   */
+  constructor(messageHandler) {
+    this.jobs = new Map();
+    this.acceptingJobs = true;
+    messageHandler.registerHandler('JOB', this.handleMessage);
+  }
+
+  /**
+   * Set the current job to be working on
+   * @param {Job} job 
+   */
+  setCurrentJob(job) {
+    return new Promise((resolve, reject) => {
+      if(this.acceptingJobs) {
+        this.currentJob = job;
+      }
+    })
+  } 
+
+  /**
+   * Get a job by id
+   * @param {String} id job identifier
+   * @returns {Promise.<Job, Error>}  
+   */
+  getJob(id) {
+    return new Promise((resolve, reject) => {
+      if(this.jobs.has(id)) {
+        resolve(this.jobs.get(id))
+      } else {
+        reject(new Error(`Job with ID: ${id} not found.`))
+      }
+    })
+  }
+
+  /**
+   * Add a job to the job pool
+   * @param {Job} job job to be added
+   */
+  addJob(id, job) {
+    if(!this.jobs.has(id)) {
+      lthis.jobs.set(job.hash, job)
+    }
+  }
+
+  /**
+   * Remove a job from the job pool
+   */
+  removeJob(id) {
+    this.jobs.delete(id)
+  }
+
+  updateJob() {
+
+  }
+
+  /**
+   * @param {Message} message 
+   */
+  handleMessage(message) {
+    return new Promise((resolve, reject) => {
+      switch(message.command) {
+        case 'CREATED':
+          if(this.acceptingJobs) {
+            Job.validate(message.job)
+            .then((isValid) => {
+              if(isValid) {
+                this.setCurrentJob(message.job);
+                const message = new Message('JOB', 'PICKEDUP', {})
+                this.sendMessage(message);
+                resolve();
+              } else {
+                reject(new Error(`Invalid message`))
+              }
+            })
+          }
+          break;
+        case 'PICKEDUP':
+          break;
+        case 'PAYMENT':
+          break;
+        case 'COMPLETED':
+        break;
+      }
+    })
+  }
+
 }
