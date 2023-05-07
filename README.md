@@ -1,6 +1,5 @@
 ![CamelidCoin Logo](./docs/logo.png)
 ## CamelidCoin
-#AI + Crypto
 
 A project with the goal to safely and securely incentivise an ad-hoc network of compute nodes to solve GPT model outputs for lightweight clients.
 
