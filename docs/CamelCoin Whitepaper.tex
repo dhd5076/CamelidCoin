@@ -17,7 +17,7 @@
     \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{1cm}
     {\fontsize{40}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
-    {\scshape\Large A Blockchain-based Model for Trustless Distributed Auto-Regressive LLM Computation and Training. \par}
+    {\scshape\Large A Blockchain-based Protocol for Trustless Distributed Auto-Regressive LLM Computation and Training. \par}
     \vspace{2cm}
     {\Large\itshape Dylan Dunn\par}
     \vfill
@@ -98,33 +98,30 @@ Each contestable situation consists of two components: the proof that can be pre
 \subsection{RASTiC Verification Algorithm}
 \subsubsection{Problem Statement and Motivation}
 \subsubsection{Implementation and Methodology}
-The RASTiC algorithm can be defined as follows
+The RASTiC algorithm states that if the following assertions hold true we can be confident that the output is valid.
 
 \begin{align*}
     \begin{aligned}
-    &\text{Let }A\text{ be the length of the input in tokens.}\\
-    &\text{Let }B\text{ be the length of the output in tokens.}\\
-    &\text{Let }T\text{ be the maximum number of tokens to generate.}\\
-    &\text{Let }R\text{ be the concatenation of }A\text{ followed by }B.\\
-    &\text{Let }F\text{ be our auto-regressive model function.}\\
-    &\text{We must ensure that the following condition is true:}\\
-    &\qquad F(\text{R}_{[0:A]}) = \text{R}_{A+1}
+        &\text{Let } X \text{ be a random integer between 2 and } (A + B) - 2. \\
+        &\text{Let }A\text{ be the length of the input in tokens.}\\
+        &\text{Let }B\text{ be the length of the output in tokens.}\\
+        &\text{Let }T\text{ be the maximum number of tokens to generate.}\\
+        &\text{Let }R\text{ be the concatenation of }A\text{ followed by }B.\\
+        &\text{Let }F\text{ be our auto-regressive model function.}\\
+        &\text{We must ensure that the following condition is true:}\\
+        &\qquad F(\text{R}_{[0:A]}) = \text{R}_{A+1} \\
+        &\text{We must ensure that the following condition is true:} \\
+        &\qquad F(\text{R}_X) = \text{R}_{[X+1]} \\
+        &\text{Lastly we must ensure that} \\
+        &\qquad \begin{aligned}
+        \begin{cases}
+            F(\text{R}{[A+B-1]}) = \text{E} & \text{if } \text{R}{[A+B-1]} \text{ is the }<\text{end}> \text{ token} \\
+            F(\text{R}{[A+B-1]}) = F(\text{R}{[A+B]}) & \text{if } \text{R} \text{ has length } \text{T}
+        \end{cases}
+        \end{aligned}
     \end{aligned}
 \end{align*}
 
-\begin{align*}
-    \begin{aligned}
-    &\text{Let } X \text{ be a random integer between 2 and } B. \\
-    &\text{We must ensure that the following condition is true:} \\
-    &\qquad F(\text{R}_X) = \text{R}_{[X+1]}
-\end{aligned}
-\end{align*}
-
-\begin{enumerate}
-\item[\textbf{Step 1:}] Do something
-\item[\textbf{Step 2:}] Do something else
-\item[\textbf{Step 3:}] And so on
-\end{enumerate}
 \subsubsection{Performance Evaluation}
 \subsubsection{Potential Attacks and Exploits}
 
