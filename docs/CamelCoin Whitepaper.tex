@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 
 % Title
-\title{CamelCoin: A Model Network For Distributed LLM Computation and Training}
+\title{CamelidCoin: A Model Network For Distributed LLM Computation and Training}
 
 % Author
 \author{Dylan Dunn}
@@ -12,10 +12,10 @@
 
 \begin{titlepage}
     \centering
-    \includegraphics[width=0.8\textwidth]{logo.png}\par\vspace{1cm}
-    {\scshape\Large Introducing CamelCoin \par}
+    \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{1cm}
+    {\fontsize{40}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
-    {\scshape\Large A Model For Trustless Distributed LLM Computation and Training\par}
+    {\scshape\Large A Blockchain-based Model for Trustless Distributed LLM Computation and Training. \par}
     \vspace{2cm}
     {\Large\itshape Dylan Dunn\par}
     \vfill
@@ -24,10 +24,17 @@
   
 
 \section{Abstract}
+CamelidCoin is a trustless, incentive-based blockchain protocol designed for distributed auto-regressive large language model (LLM) computation and training. 
+The system is built on a peer-to-peer network where lightweight clients can submit input for completion by a large pool of compute nodes. 
+In exchange for their work, the compute nodes are compensated by the client. 
+To ensure the validity of the output from these compute nodes, we propose a new algorithm called RASTiC, which can be completed either by the client or other compute nodes. 
+This algorithm quickly verifies the output's authenticity with near certainty. 
+Additionally, throughout the paper, we will detail the protocol's structure and specifics
+Our protocol works off of the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin and modifies it to fit our use case. 
+We will also discuss current challenges and limitations with our current protocol.
 
 \section{Introduction}
-\subsection{Background}
-\subsection{}
+\subsection{Related Work}
 
 \section{Technical Overview}
 \subsection{Network}
@@ -55,6 +62,7 @@
 \subsubsection{Problem Statement and Motivation}
 \subsubsection{Implementation and Methodology}
 \subsubsection{Performance Evaluation}
+\subsubsection{Potential Attacks and Exploits}
 
 \section{Challenges and Limitations}
 \subsection{Privacy}
@@ -62,7 +70,8 @@
 \section {Future Aspirations}
 \subsection{Distributed Training}
 \subsection{Proof of Stake}
-\subsection{Improved Privacy}                                                                                                                                                                       
-                                        
-\section{Conclusion}
+\subsection{Improved Privacy}    
+
+\section {Conclusion}
+
 \end{document}                                                          
