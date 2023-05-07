@@ -1,9 +1,7 @@
-/**
- * @module Network Used for handling sending and recieving data
- */
 import net from 'net'
-import { JobManager } from './jobManager';
+import { JobManager } from '../jobManager';
 import { Message, MessageHandler } from './message';
+import { logger } from '../utils/logger'
 
 /**
  * @class Node Client
@@ -15,11 +13,12 @@ export class Client {
      * @param {Number} port starting port
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      */
-    constructor(seedPeers) {
+    constructor(seedPeers = []) {
+        logger.debug(`New tcp client created with ${seedPeers.length} peers.`)
         this.messageHandler = new MessageHandler(this.sendMessage);
         this.jobManager = new JobManager(this.messageHandler)
         this.messageHandler.registerHandler('')
-        if(seedPeers != null) {
+        if(seedPeers.length > 0) {
             this.seedPeers = seedPeers;
             this.peers = [];
         } else {
@@ -72,7 +71,7 @@ export class Client {
      */
     handleConnection(connection) {
         connection.on('data', (data) => {
-            this.messageHandler.handleMessage(Message.fromBuffer(data), sender);
+            this.messageHandler.handleMessage(Message.fromBuffer(data));
         });
 
         connection.on('close', () => {

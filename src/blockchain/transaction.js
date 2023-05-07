@@ -2,7 +2,7 @@
  * @module Transcation used for creating and verifying transcations
  */
 
-import { KeyPair } from './utils/cryptoUtils';
+import { KeyPair } from '../utils/cryptoUtils';
 
 /**
  * @class Transcation
