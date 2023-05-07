@@ -1,8 +1,10 @@
 \documentclass{article}
 \usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{amsmath}
 
 % Title
-\title{CamelCoin: A Model Network For Distributed LLM Computation and Training}
+\title{CamelidCoin: A Model Network For Distributed LLM Computation and Training}
 
 % Author
 \author{Dylan Dunn}
@@ -12,10 +14,10 @@
 
 \begin{titlepage}
     \centering
-    \includegraphics[width=0.8\textwidth]{logo.png}\par\vspace{1cm}
-    {\scshape\Large Introducing CamelCoin \par}
+    \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{1cm}
+    {\fontsize{40}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
-    {\scshape\Large A Model For Trustless Distributed LLM Computation and Training\par}
+    {\scshape\Large A Blockchain-based Protocol for Trustless Distributed Auto-Regressive LLM Computation and Training. \par}
     \vspace{2cm}
     {\Large\itshape Dylan Dunn\par}
     \vfill
@@ -24,10 +26,17 @@
   
 
 \section{Abstract}
+CamelidCoin is a trustless, incentive-based blockchain protocol designed for distributed auto-regressive large language model (LLM) computation and training. 
+The system is built on a peer-to-peer network where lightweight clients can submit input for completion by a large pool of compute nodes. 
+In exchange for their work, the compute nodes are compensated by the client. 
+To ensure the validity of the output from these compute nodes, we propose a new algorithm called RASTiC, which can be completed either by the client or other compute nodes. 
+This algorithm quickly verifies the output's authenticity with near certainty. 
+Additionally, throughout the paper, we will detail the protocol's structure and specifics
+Our protocol works off of the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin and modifies it to fit our use case. 
+We will also discuss current challenges and limitations with our current protocol.
 
 \section{Introduction}
-\subsection{Background}
-\subsection{}
+\subsection{Related Work}
 
 \section{Technical Overview}
 \subsection{Network}
@@ -42,27 +51,90 @@
 \subsubsection{Structure}
 \subsubsection{Verification}
 
-\subsection{Block}
+\subsection{The Blockchain}
 \subsubsection{Structure}
+\subsubsection{Merkle Trees}
+\subsubsection{Proof of Work}
 
-\subsection{Chain}
-
-\subsection{Job}
-\subsection{Job Pool}
-\subsection{Dispute Resolution}
+\subsection{Jobs}
+A job consists of parameters that must be computed using an auto-regressive LLM, including an input string, seed, number of tokens to generate, timestamp, timelock, client address and port, and the model to use (e.g. ggml-alpaca-7b-q4). 
+The client appends a signed transaction with a reward and fee, where the reward is a transaction into an escrow pool and the fee is paid to the miner who includes the transaction in the block. 
+The client broadcasts a job creation message including the jobs parameters.
+Compute nodes that are available and capable of completing the job will start computing the output and broadcast that they have accepted the job. 
+When either the end token or token limit is reached, the node appends an output address to receive the job reward. 
+Then, the node encrypts the output with the job creator's public key and signs the hash of the input parameters, output, and reward address. 
+The node also creates a staking transaction that is only valid if the output fails validation, to testify the output validity. 
+The client receives the broadcasted testament transaction and, upon receipt of the signed output hash, creates a new transaction to replace the original one and sends it directly back to the compute node. 
+The compute node replies with the output encrypted with the client's public key. 
+The client verifies the output using the RASTiC algorithm, whose implementation will be covered later, locally if it has the full model or by requesting neighboring nodes to perform the check. While this verification step can be skipped, checking helps identify bad actors among the nodes.
+\subsubsection{Job Pool}
+The job pool operates similar to a mempool in traditional blockchains, where each full node maintains a record of every job it observes and updates their status from "created" to "accepted" to "completed."
+ Disputes for jobs can only occur when they are in the job pool. 
+ When a miner discovers a new block, it may include some or all of the transactions in the job pool in the blockchain. 
+ After a certain block height chosen by the miner, jobs will be discarded as they cannot be retroactively invalidated without mining a fork of the blockchain. 
+ Thus, jobs have a time limit for being invalidated unless a malicious miner is involved. 
+ Additionally, jobs cannot be included in a block until at least 10 minutes after their creation time, setting a minimum time for them to be invalidated. 
+ The parameters, input, and output for jobs are not stored on the blockchain. Instead, only a job ID, a hash of it's parameters, are saved in the transaction properties. 
+ Overall, this design establishes a commitment from both parties before information is exchanged without requiring a separate escrow transaction or payment channel.
+\subsubsection{Dispute Resolution}
+During the period in which jobs are in the job pool, they may be contested for a duration of approximately 15 minutes. 
+Each contestable situation consists of two components: the proof that can be presented as evidence of a contract violation, and the counter-proof that provides evidence that the accused violation did not occur.
+\par
+\setlength{\extrarowheight}{2pt}
+\begin{table} 
+\caption{Dispute Situations and Their Outcomes}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{2.75cm}|>{\raggedright\arraybackslash}p{2.75cm}|>{\raggedright\arraybackslash}p{2.75cm}|>{\raggedright\arraybackslash}p{2.75cm}|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Claim}} & \multicolumn{1}{c|}{\textbf{Proof}} & \multicolumn{1}{c|}{\textbf{Counter}} & \multicolumn{1}{c|}{\textbf{Result}} \\
+    \hline
+    Client doesn't send payment with updated destination. & Non-existance of updated client payment transaction & Existence of client payment message & Compute node forfeits payment, Client doesn't receive output. \\
+    \hline
+    Compute node gave invalid output & Output commitment fails RUSTiC test. & Re-test shows otherwise & Compute node forfeits stake, Client commitment to escrow is invalidated. \\
+    \hline
+\end{tabular}
+\end{table}
+  
 
 \subsection{RASTiC Verification Algorithm}
 \subsubsection{Problem Statement and Motivation}
 \subsubsection{Implementation and Methodology}
+The RASTiC algorithm states that if the following assertions hold true we can be confident that the output is valid.
+
+\begin{align*}
+    \begin{aligned}
+        &\text{Let } X \text{ be a random integer between 2 and } (A + B) - 2. \\
+        &\text{Let }A\text{ be the length of the input in tokens.}\\
+        &\text{Let }B\text{ be the length of the output in tokens.}\\
+        &\text{Let }T\text{ be the maximum number of tokens to generate.}\\
+        &\text{Let }R\text{ be the concatenation of }A\text{ followed by }B.\\
+        &\text{Let }F\text{ be our auto-regressive model function.}\\
+        &\text{We must ensure that the following condition is true:}\\
+        &\qquad F(\text{R}_{[0:A]}) = \text{R}_{A+1} \\
+        &\text{We must ensure that the following condition is true:} \\
+        &\qquad F(\text{R}_X) = \text{R}_{[X+1]} \\
+        &\text{Lastly we must ensure that} \\
+        &\qquad \begin{aligned}
+        \begin{cases}
+            F(\text{R}{[A+B-1]}) = \text{E} & \text{if } \text{R}{[A+B-1]} \text{ is the }<\text{end}> \text{ token} \\
+            F(\text{R}{[A+B-1]}) = F(\text{R}{[A+B]}) & \text{if } \text{R} \text{ has length } \text{T}
+        \end{cases}
+        \end{aligned}
+    \end{aligned}
+\end{align*}
+
 \subsubsection{Performance Evaluation}
+\subsubsection{Potential Attacks and Exploits}
 
 \section{Challenges and Limitations}
 \subsection{Privacy}
+\subsection{Inefficient Delegation}
 
 \section {Future Aspirations}
 \subsection{Distributed Training}
 \subsection{Proof of Stake}
-\subsection{Improved Privacy}                                                                                                                                                                       
-                                        
-\section{Conclusion}
+\subsection{Improved Privacy}    
+\subsection{Using job completion as POW}
+
+\section {Conclusion}
+
 \end{document}                                                          
