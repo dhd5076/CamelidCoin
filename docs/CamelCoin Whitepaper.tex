@@ -8,6 +8,7 @@
 \usepackage{draftwatermark}
 \usepackage{algorithmic}
 \usepackage{algorithm}
+\usepackage{float}
 
 
 % \SetWatermarkText{DRAFT}
@@ -72,18 +73,13 @@ Additionally, our proposed \ac{RASTiC} algorithm provides a novel approach to ou
 \subsection{Network}
 \subsubsection{Peer Discovery}
 
-The CamelidCoin network is a peer-to-peer network, where each node connects to other nodes directly.
-When a node first joins the network, it needs to discover other nodes to connect to.
-We use a modified version of the Kademlia distributed hash table (DHT) protocol for peer discovery.
+Peer discovery in CamelidCoin is the process by which nodes on the network find and connect to other nodes. 
+When a new node joins the network, it sends a message to a set of predefined seed nodes, which are nodes known to be online and reliable. 
+These seed nodes respond with the addresses of other nodes they know about, which allows the new node to begin connecting to more nodes.
 
-In the CamelidCoin network, each node has a unique identifier, represented as a hash.
-When a node wants to join the network, it sends a message to a bootstrap node (a well-known node in the network) containing its identifier.
-The bootstrap node responds with the K closest nodes to the new node's identifier.
-The new node then connects to these nodes and starts exchanging messages with them.
-
-When a node receives a message from a new node, it adds the node to its list of known peers.
-The node also periodically sends out "ping" messages to its known peers to check if they are still online.
-If a node does not respond to a ping message for a certain amount of time, it is marked as offline and removed from the list of known peers.
+As nodes connect to each other, they exchange information about other nodes they know about. 
+This information includes the IP address and port number of each node, as well as its current status and the services it provides.
+Nodes keep a list of these known nodes, which they use to discover and connect to new nodes in the future.
 
 \subsubsection{Messaging Protocol}
 
@@ -122,12 +118,29 @@ Let $addr = \text{Base58Check}(buf || h_2 || chksum)$ be the concatenated result
 
 Note: This formula assumes that $PK$ is a valid public key and that all hash functions return values in their hexadecimal representation. It also assumes that the concatenation operator is denoted by "$||$".
 \subsection{Transaction}
-\subsubsection{Structure}
-\subsubsection{Verification}
 
-\subsection{The Blockchain}
-\subsubsection{Structure}
-\subsubsection{Merkle Trees}
+A CamelCoin transaction is a data structure consisting of several fields:
+
+\begin{itemize}
+    \item \textbf{Version}: A 4-byte field indicating the transaction version number.
+    \item \textbf{Input Count}: A variable-length integer indicating the number of inputs in the transaction.
+    \item \textbf{Inputs}: A list of transaction inputs, where each input contains the following fields:
+    \begin{itemize}
+        \item \textbf{Transaction ID}: A 32-byte field indicating the transaction ID of the previous transaction output being spent.
+        \item \textbf{Output Index}: A 4-byte field indicating the index of the previous transaction output being spent in the list of outputs.
+        \item \textbf{ScriptSig}: A variable-length field containing a script that satisfies the conditions of the previous transaction output being spent.
+        \item \textbf{Sequence}: A 4-byte field indicating the transaction version number.
+    \end{itemize}
+    \item \textbf{Output Count}: A variable-length integer indicating the number of outputs in the transaction.
+    \item \textbf{Outputs}: A list of transaction outputs, where each output contains the following fields:
+    \begin{itemize}
+        \item \textbf{Value}: An 8-byte field indicating the amount of CamelCoins being transferred.
+        \item \textbf{ScriptPubKey}: A variable-length field containing a script that defines the conditions under which the output can be spent.
+    \end{itemize}
+    \item \textbf{Lock Time}: A 4-byte field indicating the earliest time or block height at which the transaction can be added to the blockchain.
+    \item \textbf{Job ID}: A 32-byte field indicating the hash of the job that the transaction was used to pay for, if applicable.
+\end{itemize}
+
 \subsubsection{Proof of Work}
 Proof of Work (PoW) is a consensus mechanism that is used to validate transactions and generate new blocks in the CamelidCoin blockchain. 
 The idea behind PoW is to require computational work to be done by a node in order to add a new block to the blockchain. 
@@ -153,7 +166,7 @@ The client appends a signed transaction with a reward and fee, where the reward 
 The client broadcasts a job creation message including the jobs parameters.
 Compute nodes that are available and capable of completing the job will start computing the output and broadcast that they have accepted the job. 
 When either the end token or token limit is reached, the node appends an output address to receive the job reward. 
-Then, the node encrypts the output with the job creator's public key and signs the hash of the input parameters, output, and reward address. 
+Then, the compute node signs the hash of the input parameters, output, and reward address. 
 The node also creates a staking transaction that is only valid if the output fails validation, to testify the output validity. 
 The client receives the broadcasted testament transaction and, upon receipt of the signed output hash, creates a new transaction to replace the original one and sends it directly back to the compute node. 
 The compute node replies with the output encrypted with the client's public key. 
@@ -168,11 +181,10 @@ The job pool operates similar to a mempool in traditional blockchains, where eac
  The parameters, input, and output for jobs are not stored on the blockchain. Instead, only a job ID, a hash of it's parameters, are saved in the transaction properties. 
  Overall, this design establishes a commitment from both parties before information is exchanged without requiring a separate escrow transaction or payment channel.
 \subsubsection{Dispute Resolution}
-During the period in which jobs are in the job pool, they may be contested for a duration of approximately 15 minutes. 
+During the period in which jobs are in the job pool, they may be contested for a duration of approximately 10 minutes. 
 Each contestable situation consists of two components: the proof that can be presented as evidence of a contract violation, and the counter-proof that provides evidence that the accused violation did not occur.
-\par
 \setlength{\extrarowheight}{2pt}
-\begin{table} 
+\begin{table}[H]
 \caption{Dispute Situations and Their Outcomes}
 \begin{tabular}{|>{\raggedright\arraybackslash}p{2.75cm}|>{\raggedright\arraybackslash}p{2.75cm}|>{\raggedright\arraybackslash}p{2.75cm}|>{\raggedright\arraybackslash}p{2.75cm}|}
     \hline
@@ -201,9 +213,9 @@ The \ac{RASTiC} algorithm states that if the following assertions hold true we c
 
 \begin{align*}
     \begin{aligned}
-        &\text{Let } X \text{ be a random integer between 2 and } (A + B) - 2. \\
         &\text{Let }A\text{ be the length of the input in tokens.}\\
         &\text{Let }B\text{ be the length of the output in tokens.}\\
+        &\text{Let } X \text{ be a random integer between 2 and } (A + B) - 2. \\
         &\text{Let }T\text{ be the maximum number of tokens to generate.}\\
         &\text{Let }R\text{ be the concatenation of }A\text{ followed by }B.\\
         &\text{Let }F\text{ be our auto-regressive model function.}\\
@@ -220,6 +232,19 @@ The \ac{RASTiC} algorithm states that if the following assertions hold true we c
         \end{aligned}
     \end{aligned}
 \end{align*}
+
+To outsource verification, the client follows the process outlined below:
+\subsubsection{Outsourced Verification}
+\begin{enumerate}
+\item The client sends one or more requests for verification to neighboring nodes. Each request includes the job ID, input and output arrays, and a random index to check.
+\item The neighboring nodes compute the output value for the given index, hash it, and send the hash back to the client.
+\item The client receives the hashed output values from the neighboring nodes and verifies that they match the corresponding output values in the output array.
+\end{enumerate}
+
+This process ensures that the client can outsource the verification of its computations to neighboring nodes in a trustless manner.
+Full nodes are responsible for completing the validation process as it ensures the security of the network, which benefits all nodes. 
+The client will not receive any free computation, as only the hash of the single token completion is returned. 
+This mechanism prevents clients from attempting to obtain free completions by sending verification requests one token at a time.
 
 \subsection{Evaluation}
 
@@ -255,15 +280,31 @@ There are a couple of exploits that we can foresee being used to bypass the algo
     \item \textbf{Repetition:} By using very repetitive outputs, we could theoretically force a false positive. 
     For example, if the tokens for 1 2 3 4 5 6 are seen one after each other, the language model may latch onto the pattern and fill the rest of the output with the pattern, allowing the compute node to bypass expensive computation. 
     However, this is why we test for continuity. 
-    Theoretically, the only exploitable inputs would be highly repetitive, and even then, we haven't achieved anything since we can't deviate from the pattern, the pattern that is very close or is correct. 
+    Theoretically, the only exploitable inputs would be highly repetitive, and even then, we haven't achieved anything since we can't deviate from the pattern, the pattern that is very close to or identical to truth. 
     However, we do see this as a possible path for exploitation in the future.
-    \item \textbf{Trends towards truncation:} While we weren't able to produce such a token, sequences could be forced to quickly generate the $\langle$end$\rangle$ token early. However, the node would need to be able to do this more than 51\% of the time or would lose money through slashed stakes.
-    \item \textbf{Inference:} Theoretically, because of the limited vocabulary of everyday inputs, lazy prediction algorithms could be used to predict words without computing exploits. But, if the node were able to do this effectively enough, this is but an evolution of the network since it would need to be right at least 51\% of the time as not to lose money.
+    \item \textbf{Trends towards truncation:} While we weren't able to produce an example, sequences could be forced to quickly generate the $\langle$end$\rangle$ token early. 
+    However, the node would need to be able to do this more than 51\% of the time or would lose money through slashed stakes.
+    \item \textbf{Inference:} Theoretically, because of the limited vocabulary of everyday inputs, lazy prediction algorithms could be used to predict words without use of the official model.
+     But, if the node were able to do this effectively enough, this is but an evolution of the network since it would need to be right at least 51\% of the time as not to lose money.
 \end{enumerate}
 
 \section{Challenges and Limitations}
+\subsection{Privacy}
+One of the significant challenges with the current protocol is that the inputs must be disclosed to the network, posing a potential privacy risk. Although one potential solution is to encrypt the input and wait to disclose it until a node responds, the input must still be disclosed for verification, making it vulnerable to being intercepted by attackers.
+
+A potential solution to this problem is to compute only the first layer of the network before sending it to be completed, which requires only a small slice of the model to be stored locally. The averaging of weights and bias in a tensor during this process ensures that there is no way to reconstruct the input, thereby reducing the privacy risk. However, this method is not foolproof, as anyone with a copy of the model could finish the computation and access the full unencrypted output.
+
+One approach that has been successful in certain contexts, such as in healthcare, is to hold the last layer of the model secretly by a central authority. This approach allows for outsourcing of the majority of the compute without disclosing sensitive information, such as HIPAA data. However, this method is not applicable in a fully distributed system, as each node needs a complete copy of the model for verification.
+
+Currently, there is no full model for an auto-regressive zero-knowledge proof, but there are promising fields that may offer alternatives with more research. Therefore, privacy remains a significant challenge in the protocol that requires further exploration and development of effective solutions.
 \subsubsection{Homomorphic Encryption}
+A potential solution to the problem of disclosing inputs in the protocol is the use of homomorphic encryption, which allows for computations to be performed on encrypted data. This field of research holds promise for outsourcing auto-regressive models securely. 
+However, current developments in fully homomorphic encryption increase the time to compute by several orders of magnitude. For instance, encryption operations that can take nanoseconds, such as addition in Paillier encryption, can take several seconds, minutes, or even hours at scale. 
+This is not feasible in a distributed neural network computation, where encryption, compute, and decryption must be done within a few seconds. Organizations such as OpenMined are leading the effort to implement these principles, but it would require a significant amount of effort and modification to the current model
 \subsection{Inefficient Delegation}
+Another challenge with the current implementation is the redundant computation of data, which is a necessary precaution to protect against malicious nodes and account for the ad-hoc nature of the network. 
+While this ensures that the quickest free node can respond promptly, it does lead to inefficiencies in the delegation of tasks. 
+As a result, there may be opportunities to optimize the process and reduce redundant computation without compromising the integrity of the network. Ongoing research in distributed systems may provide new solutions to this challenge in the future.
 
 \section {Future Aspirations}
 \subsection{Distributed Training}
@@ -286,9 +327,15 @@ This is a challenging task for an emerging coin, as without a large market cap, 
 However, once the coin has stabilized and has a sufficient market cap, we plan to follow in the footsteps of Ethereum and make the switch. 
 By doing so, we will be able to eliminate the wasteful compute associated with traditional Proof-Of-Work and move towards a more sustainable and eco-friendly system.
 
-\subsection{Improved Privacy}    
-\subsection{Using job completion as POW}
+While using job completion as proof of work has some potential advantages, it is unlikely to completely replace the proof-of-work algorithm. Nevertheless, it is an interesting area of research that could lead to innovative solutions for blockchain scalability and security.
 
-\section {Conclusion}
+\section {Mission Statement}
+Auto-regressive models such as LLM will define the next decade. Our primary goal is to further democratize large language models.
+Large language models have been trained on data created by the collective efforts of humanity and thus belong to the people. 
+A concerted effort must be made to prevent LLM from becoming the exclusive property of monopolistic corporations. 
+We believe that large language models should be a force for increasing equity, empowering people from all backgrounds to share their thoughts and ideas without the influence of their ethnic or economic status. 
+LLMs are fantastic learning tools that provide access to a wealth of knowledge. 
+We are committed to promoting the development of open-source LLM projects and believe that a collective effort can quickly surpass the advancements made by private entities. 
+We strive to contribute to the ongoing democratization of language models and work towards a more equitable future for all.
 
 \end{document}                                                          
