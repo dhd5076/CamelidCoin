@@ -1,8 +1,8 @@
 ![CamelidCoin Logo](./docs/logo.png)
 ## CamelidCoin
 
-A project with the goal to safely and securely incentivise an ad-hoc network of compute nodes to solve GPT model outputs for lightweight clients.
+Read the whitepaper here: [CamelidCoin Whitepaper](https://www.camelidcoin.org/whitepaper.pdf)
 
-This entire project is based on the RASTiC algorithm which provides a way to confidently validate auto-regressive LLM output in O(1) time.
+CamelidCoin is a blockchain protocol designed for distributed large language model computation and training. Clients submit input for completion by a pool of compute nodes who are compensated in return. To ensure output validity, we propose a new algorithm called RASTiC which quickly verifies output authenticity with near certainty. Our protocol is built on the original Bitcoin model and has been modified to fit our use case. 
 
 Donate: BTC | bc1qk9862hexqy5adf4xwd26s28y9w87yjwm369nls
