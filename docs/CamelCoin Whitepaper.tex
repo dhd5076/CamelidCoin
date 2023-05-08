@@ -4,7 +4,6 @@
 \usepackage{amsmath}
 \usepackage{acronym}
 \usepackage{url}
-\usepackage{color}
 \usepackage{draftwatermark}
 \usepackage{algorithmic}
 \usepackage{algorithm}
@@ -12,8 +11,8 @@
 
 
 % \SetWatermarkText{DRAFT}
-% \SetWatermarkColor{red}
-% \SetWatermarkScale{5}
+\SetWatermarkColor[gray]{0.95}
+\SetWatermarkScale{8}
 
 \newcommand{\Function}[2]{\textbf{function}\ \textsc{#1}(#2)}
 
@@ -22,18 +21,22 @@
 
 
 \begin{document}
-\acrodef{RASTiC}{Random Autoregressive Subsampling for Token Integrity Checking}
+\acrodef{RASTiC}{(Random Autoregressive Subsampling for Token Integrity Checking)}
 
 \begin{titlepage}
     \centering
-    \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{1cm}
+    \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{.5cm}
+    {\small Revision 1.0.0 \\}
+    \vspace{1cm}
     {\fontsize{40}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
     {\scshape\Large A Blockchain-based Protocol for Trustless Distributed Auto-Regressive LLM Computation and Training. \par}
     \vspace{2cm}
-    {\Large Dylan Dunn \\ contact@dylandunn.me\par}
+    {\Large Dylan Dunn \\}
+    {\Large contact@dylandunn.me \\}
     \vspace{1cm}
     \url{https://camelcoin.org}
+    \vspace{0.5cm}
     \vfill
     {\large May 5, 2023\par}
   \end{titlepage}
@@ -170,7 +173,8 @@ Then, the compute node signs the hash of the input parameters, output, and rewar
 The node also creates a staking transaction that is only valid if the output fails validation, to testify the output validity. 
 The client receives the broadcasted testament transaction and, upon receipt of the signed output hash, creates a new transaction to replace the original one and sends it directly back to the compute node. 
 The compute node replies with the output encrypted with the client's public key. 
-The client verifies the output using the \ac{RASTiC} algorithm, whose implementation will be covered later, locally if it has the full model or by requesting neighboring nodes to perform the check. While this verification step can be skipped, checking helps identify bad actors among the nodes.
+The client verifies the output using the \ac{RASTiC} algorithm, whose implementation will be covered later, locally if it has the full model or by requesting neighboring nodes to perform the check. 
+While this verification step can be skipped, checking helps identify bad actors among the nodes.
 \subsubsection{Job Pool}
 The job pool operates similar to a mempool in traditional blockchains, where each full node maintains a record of every job it observes and updates their status from "created" to "accepted" to "completed."
  Disputes for jobs can only occur when they are in the job pool. 
@@ -198,7 +202,7 @@ Each contestable situation consists of two components: the proof that can be pre
 \end{table}
   
 
-\subsection{\ac{RASTiC} Random Autoregressive Subsampling for Token Integrity Checking} 
+\subsection{\ac{RASTiC} (Random Autoregressive Subsampling for Token Integrity Checking)} 
 \subsubsection{Problem Statement and Motivation}
 The current process of outsourcing the computation of auto-regressive models lacks a way to verify that the computation has been performed accurately. 
 In situations where fulfilling requests is compensated, this creates a strong incentive to answer every request, regardless of whether the computation has actually been done.
@@ -219,6 +223,7 @@ The \ac{RASTiC} algorithm states that if the following assertions hold true we c
         &\text{Let }T\text{ be the maximum number of tokens to generate.}\\
         &\text{Let }R\text{ be the concatenation of }A\text{ followed by }B.\\
         &\text{Let }F\text{ be our auto-regressive model function.}\\
+        &\text{Let }E\text{ be the end token}\\
         &\text{We must ensure that the following condition is true:}\\
         &\qquad F(\text{R}_{[0:A]}) = \text{R}_{A+1} \\
         &\text{We must ensure that the following condition is true:} \\
@@ -233,8 +238,8 @@ The \ac{RASTiC} algorithm states that if the following assertions hold true we c
     \end{aligned}
 \end{align*}
 
-To outsource verification, the client follows the process outlined below:
 \subsubsection{Outsourced Verification}
+To outsource verification, the client follows the process outlined below:
 \begin{enumerate}
 \item The client sends one or more requests for verification to neighboring nodes. Each request includes the job ID, input and output arrays, and a random index to check.
 \item The neighboring nodes compute the output value for the given index, hash it, and send the hash back to the client.
@@ -290,17 +295,26 @@ There are a couple of exploits that we can foresee being used to bypass the algo
 
 \section{Challenges and Limitations}
 \subsection{Privacy}
-One of the significant challenges with the current protocol is that the inputs must be disclosed to the network, posing a potential privacy risk. Although one potential solution is to encrypt the input and wait to disclose it until a node responds, the input must still be disclosed for verification, making it vulnerable to being intercepted by attackers.
+One of the significant challenges with the current protocol is that the inputs must be disclosed to the network, posing a potential privacy risk. 
+Although one potential solution is to encrypt the input and wait to disclose it until a node responds, the input must still be disclosed for verification, making it vulnerable to being intercepted by attackers.
 
-A potential solution to this problem is to compute only the first layer of the network before sending it to be completed, which requires only a small slice of the model to be stored locally. The averaging of weights and bias in a tensor during this process ensures that there is no way to reconstruct the input, thereby reducing the privacy risk. However, this method is not foolproof, as anyone with a copy of the model could finish the computation and access the full unencrypted output.
+A potential solution to this problem is to compute only the first layer of the network before sending it to be completed, which requires only a small slice of the model to be stored locally. 
+The averaging of weights and bias in a tensor during this process ensures that there is no way to reconstruct the input, thereby reducing the privacy risk. 
+However, this method is not foolproof, as anyone with a copy of the model could finish the computation and access the full unencrypted output.
 
-One approach that has been successful in certain contexts, such as in healthcare, is to hold the last layer of the model secretly by a central authority. This approach allows for outsourcing of the majority of the compute without disclosing sensitive information, such as HIPAA data. However, this method is not applicable in a fully distributed system, as each node needs a complete copy of the model for verification.
+One approach that has been successful in certain contexts, such as in healthcare, is to hold the last layer of the model secretly by a central authority. 
+This approach allows for outsourcing of the majority of the compute without disclosing sensitive information, such as HIPAA data. 
+However, this method is not applicable in a fully distributed system, as each node needs a complete copy of the model for verification.
 
-Currently, there is no full model for an auto-regressive zero-knowledge proof, but there are promising fields that may offer alternatives with more research. Therefore, privacy remains a significant challenge in the protocol that requires further exploration and development of effective solutions.
+Currently, there is no full model for an auto-regressive zero-knowledge proof, but there are promising fields that may offer alternatives with more research. 
+Therefore, privacy remains a significant challenge in the protocol that requires further exploration and development of effective solutions.
 \subsubsection{Homomorphic Encryption}
-A potential solution to the problem of disclosing inputs in the protocol is the use of homomorphic encryption, which allows for computations to be performed on encrypted data. This field of research holds promise for outsourcing auto-regressive models securely. 
-However, current developments in fully homomorphic encryption increase the time to compute by several orders of magnitude. For instance, encryption operations that can take nanoseconds, such as addition in Paillier encryption, can take several seconds, minutes, or even hours at scale. 
-This is not feasible in a distributed neural network computation, where encryption, compute, and decryption must be done within a few seconds. Organizations such as OpenMined are leading the effort to implement these principles, but it would require a significant amount of effort and modification to the current model
+A potential solution to the problem of disclosing inputs in the protocol is the use of homomorphic encryption, which allows for computations to be performed on encrypted data. 
+This field of research holds promise for outsourcing auto-regressive models securely. 
+However, current developments in fully homomorphic encryption increase the time to compute by several orders of magnitude. 
+For instance, encryption operations that can take nanoseconds, such as addition in Paillier encryption, can take several seconds, minutes, or even hours at scale. 
+This is not feasible in a distributed neural network computation, where encryption, compute, and decryption must be done within a few seconds. 
+Organizations such as OpenMined are leading the effort to implement these principles, but it would require a significant amount of effort and modification to the current model
 \subsection{Inefficient Delegation}
 Another challenge with the current implementation is the redundant computation of data, which is a necessary precaution to protect against malicious nodes and account for the ad-hoc nature of the network. 
 While this ensures that the quickest free node can respond promptly, it does lead to inefficiencies in the delegation of tasks. 
@@ -329,13 +343,16 @@ By doing so, we will be able to eliminate the wasteful compute associated with t
 
 While using job completion as proof of work has some potential advantages, it is unlikely to completely replace the proof-of-work algorithm. Nevertheless, it is an interesting area of research that could lead to innovative solutions for blockchain scalability and security.
 
-\section {Mission Statement}
-Auto-regressive models such as LLM will define the next decade. Our primary goal is to further democratize large language models.
-Large language models have been trained on data created by the collective efforts of humanity and thus belong to the people. 
-A concerted effort must be made to prevent LLM from becoming the exclusive property of monopolistic corporations. 
-We believe that large language models should be a force for increasing equity, empowering people from all backgrounds to share their thoughts and ideas without the influence of their ethnic or economic status. 
+\section {Closing Statements}
+Auto-regressive models such as LLMs will define the next decade. Our primary goal is to further democratize large language models.
+LLMs have been trained on data created by the collective efforts of humanity and thus belong to the people. 
+A concerted effort must be made to prevent LLMs from becoming the exclusive property of monopolistic corporations. 
+We believe that large language models should be a force for increasing equity, empowering people from all backgrounds to share and implement their thoughts and ideas without the influence of their ethnic or economic status. 
 LLMs are fantastic learning tools that provide access to a wealth of knowledge. 
 We are committed to promoting the development of open-source LLM projects and believe that a collective effort can quickly surpass the advancements made by private entities. 
 We strive to contribute to the ongoing democratization of language models and work towards a more equitable future for all.
+
+We acknowledge that open source LLM projects have rapidly caught up to those developed by large corporations, and we believe that collective efforts can quickly surpass private ones. 
+By fostering an inclusive and collaborative community, we aim to advance the state of the art in auto-regressive models, making them more accessible and beneficial to all.
 
 \end{document}                                                          
