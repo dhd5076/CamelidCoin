@@ -2,15 +2,26 @@
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{amsmath}
+\usepackage{acronym}
+\usepackage{url}
+\usepackage{color}
+\usepackage{draftwatermark}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+
+% \SetWatermarkText{DRAFT}
+% \SetWatermarkColor{red}
+% \SetWatermarkScale{5}
+
+\newcommand{\Function}[2]{\textbf{function}\ \textsc{#1}(#2)}
 
 % Title
 \title{CamelidCoin: A Model Network For Distributed LLM Computation and Training}
 
-% Author
-\author{Dylan Dunn}
-\date{May 5, 2023}
 
 \begin{document}
+\acrodef{RASTiC}{Random Autoregressive Subsampling for Token Integrity Checking}
 
 \begin{titlepage}
     \centering
@@ -19,34 +30,97 @@
     \vspace{1cm}
     {\scshape\Large A Blockchain-based Protocol for Trustless Distributed Auto-Regressive LLM Computation and Training. \par}
     \vspace{2cm}
-    {\Large\itshape Dylan Dunn\par}
+    {\Large Dylan Dunn \\ contact@dylandunn.me\par}
+    \vspace{1cm}
+    \url{https://camelcoin.org}
     \vfill
     {\large May 5, 2023\par}
   \end{titlepage}
-  
 
 \section{Abstract}
 CamelidCoin is a trustless, incentive-based blockchain protocol designed for distributed auto-regressive large language model (LLM) computation and training. 
 The system is built on a peer-to-peer network where lightweight clients can submit input for completion by a large pool of compute nodes. 
 In exchange for their work, the compute nodes are compensated by the client. 
-To ensure the validity of the output from these compute nodes, we propose a new algorithm called RASTiC, which can be completed either by the client or other compute nodes. 
+To ensure the validity of the output from these compute nodes, we propose a new algorithm called \ac{RASTiC}, which can be completed either by the client or other compute nodes. 
 This algorithm quickly verifies the output's authenticity with near certainty. 
-Additionally, throughout the paper, we will detail the protocol's structure and specifics
+Additionally, throughout the paper, we will detail the protocol's structure and specifics.
 Our protocol works off of the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin and modifies it to fit our use case. 
 We will also discuss current challenges and limitations with our current protocol.
 
+\tableofcontents
+
 \section{Introduction}
 \subsection{Related Work}
+The concept of distributed computation is not new, and several existing projects utilize it for various purposes.
+
+One notable project is the Folding@home project, which uses distributed computing to simulate protein folding for research purposes.
+However, this project requires dedicated software to be installed on users' machines, and the computation is not incentivized beyond the altruistic motives of the participants.
+
+Another project is Golem, which aims to provide a decentralized, global supercomputer.
+It utilizes the Ethereum blockchain to allow users to rent out computing power or request computation power for their own purposes.
+However, it does not focus on LLM computation specifically, and its model does not involve any validation of the output.
+
+Finally, several projects in the blockchain space aim to provide decentralized machine learning services, such as SingularityNET and Ocean Protocol.
+These projects allow users to request machine learning services from a decentralized network of providers.
+However, their focus is on traditional machine learning tasks, and they do not specifically target auto-regressive LLMs.
+
+In contrast to these existing projects, CamelidCoin is specifically designed for distributed auto-regressive LLM computation and training, with a focus on trustless and incentivized computation.
+Additionally, our proposed \ac{RASTiC} algorithm provides a novel approach to output validation that enables the system to operate without relying on trust between the client and compute nodes.
 
 \section{Technical Overview}
+
 \subsection{Network}
 \subsubsection{Peer Discovery}
+
+The CamelidCoin network is a peer-to-peer network, where each node connects to other nodes directly.
+When a node first joins the network, it needs to discover other nodes to connect to.
+We use a modified version of the Kademlia distributed hash table (DHT) protocol for peer discovery.
+
+In the CamelidCoin network, each node has a unique identifier, represented as a hash.
+When a node wants to join the network, it sends a message to a bootstrap node (a well-known node in the network) containing its identifier.
+The bootstrap node responds with the K closest nodes to the new node's identifier.
+The new node then connects to these nodes and starts exchanging messages with them.
+
+When a node receives a message from a new node, it adds the node to its list of known peers.
+The node also periodically sends out "ping" messages to its known peers to check if they are still online.
+If a node does not respond to a ping message for a certain amount of time, it is marked as offline and removed from the list of known peers.
+
 \subsubsection{Messaging Protocol}
 
+The CamelidCoin messaging protocol is used for communication between nodes in the network.
+It is a simple protocol based on sending and receiving messages.
+Each message consists of a header and a payload.
+The header contains information such as the sender's and receiver's addresses, the message type, and the length of the payload.
+The payload contains the actual message data.
+
+The messaging protocol is used for several purposes in the network.
+Nodes use it to broadcast transactions and blocks, to request information from other nodes (such as the list of known peers), and to exchange job and output data.
+
+Messages in the CamelidCoin network are sent over TCP/IP connections.
+Each node maintains a number of connections to other nodes in the network, which it uses for sending and receiving messages.
+When a node receives a message, it checks the header to determine the type of message and the intended recipient.
+If the message is intended for the node, it processes the payload and sends a response if necessary.
+If the message is not intended for the node, it forwards it to the appropriate recipient based on the message header.
 \subsection{Wallet}
 \subsubsection{Keypair Creation}
+To create a new keypair, we use the Elliptic Curve Digital Signature Algorithm (ECDSA) with the secp256k1 curve, the same algorithm used by Bitcoin. The process for creating a new keypair is as follows:
+
+\begin{enumerate}
+\item Generate a new private key $k$, which is a random 256-bit integer.
+\item Calculate the corresponding public key $K$ by multiplying the curve's generator point $G$ by the private key: $K = k \times G$.
+\end{enumerate}
 \subsubsection{Public Address}
 
+Let $PK$ be the public key to convert to a CamelidCoin address.\\
+Let $h_1 = \text{SHA-256}(PK)$ be the SHA-256 hash of the public key.\\
+Let $h_2 = \text{RIPEMD-160}(h_1)$ be the RIPEMD-160 hash of the SHA-256 hash.\\
+Let $buf = 0x00$ be a buffer with value 0x00.\\
+Let $h_3 = \text{SHA-256}(buf || h_2)$ be the SHA-256 hash of the concatenated buffer and RIPEMD-160 hash.\\
+Let $h_4 = \text{SHA-256}(h_3)$ be the SHA-256 hash of the previous result.\\
+Let $chksum = \text{first 4 bytes of } h_4$ be the first 4 bytes of the second SHA-256 hash.\\
+Let $addr = \text{Base58Check}(buf || h_2 || chksum)$ be the concatenated result encoded in Base58Check encoding.\\
+
+Note: This formula assumes that $PK$ is a valid public key and that all hash functions return values in their hexadecimal representation. It also assumes that the concatenation operator is denoted by "$||$".
 \subsection{Transaction}
 \subsubsection{Structure}
 \subsubsection{Verification}
@@ -55,6 +129,23 @@ We will also discuss current challenges and limitations with our current protoco
 \subsubsection{Structure}
 \subsubsection{Merkle Trees}
 \subsubsection{Proof of Work}
+Proof of Work (PoW) is a consensus mechanism that is used to validate transactions and generate new blocks in the CamelidCoin blockchain. 
+The idea behind PoW is to require computational work to be done by a node in order to add a new block to the blockchain. 
+This computational work takes the form of solving a complex mathematical puzzle that is computationally difficult to solve, but easy to verify.
+
+The specific PoW algorithm used in CamelidCoin is SHA-256, which is the same algorithm used in Bitcoin. 
+When a node wants to add a new block to the blockchain, it must first solve a puzzle based on a set of block headers. 
+The header includes the block's timestamp, the hash of the previous block, a hash of the current transactions, and a nonce. 
+The nonce is a 32-bit value that is incremented by the node until the block header's hash meets a certain target difficulty. 
+The difficulty is determined by the current network hashrate, which is the total computational power being used by all nodes on the network.
+
+Nodes compete to solve the puzzle, and the first node to solve the puzzle and find a valid hash can add the new block to the blockchain. 
+This node is rewarded with a block reward, which is currently set at 50 CamelidCoins. The block reward halves every 1,000,000 blocks, similar to Bitcoin.
+However, we have reduced the frequency of the block reward halving in order to account for a far greater number of transactions per second.
+
+PoW is an energy-intensive process, and as such, it has received criticism for its environmental impact. 
+However, it is a proven and secure consensus mechanism that has been used by Bitcoin for over a decade.
+In the future, CamelidCoin may explore alternative consensus mechanisms that are more energy-efficient, such as Proof of Stake or Proof of Authority.
 
 \subsection{Jobs}
 A job consists of parameters that must be computed using an auto-regressive LLM, including an input string, seed, number of tokens to generate, timestamp, timelock, client address and port, and the model to use (e.g. ggml-alpaca-7b-q4). 
@@ -66,7 +157,7 @@ Then, the node encrypts the output with the job creator's public key and signs t
 The node also creates a staking transaction that is only valid if the output fails validation, to testify the output validity. 
 The client receives the broadcasted testament transaction and, upon receipt of the signed output hash, creates a new transaction to replace the original one and sends it directly back to the compute node. 
 The compute node replies with the output encrypted with the client's public key. 
-The client verifies the output using the RASTiC algorithm, whose implementation will be covered later, locally if it has the full model or by requesting neighboring nodes to perform the check. While this verification step can be skipped, checking helps identify bad actors among the nodes.
+The client verifies the output using the \ac{RASTiC} algorithm, whose implementation will be covered later, locally if it has the full model or by requesting neighboring nodes to perform the check. While this verification step can be skipped, checking helps identify bad actors among the nodes.
 \subsubsection{Job Pool}
 The job pool operates similar to a mempool in traditional blockchains, where each full node maintains a record of every job it observes and updates their status from "created" to "accepted" to "completed."
  Disputes for jobs can only occur when they are in the job pool. 
@@ -95,10 +186,18 @@ Each contestable situation consists of two components: the proof that can be pre
 \end{table}
   
 
-\subsection{RASTiC Verification Algorithm}
+\subsection{\ac{RASTiC} Random Autoregressive Subsampling for Token Integrity Checking} 
 \subsubsection{Problem Statement and Motivation}
+The current process of outsourcing the computation of auto-regressive models lacks a way to verify that the computation has been performed accurately. 
+In situations where fulfilling requests is compensated, this creates a strong incentive to answer every request, regardless of whether the computation has actually been done.
+
+At present, clients have two options: to perform the computation themselves, which is redundant, or to ask multiple nodes to compute the output, which is also inefficient. 
+Therefore, a new algorithm is needed that employs an asymmetric difficulty, where generating outputs is difficult (currently $O(n^2))$, but checking the validity of these outputs is fast and efficient $(O(1))$.
+
+Thus, we propose the \ac{RASTiC} algorithm as a solution to this problem.
+\ac{RASTiC} allows for efficient verification of the outputs generated by an auto-regressive model, providing a reliable way to verify that the computation has been performed accurately without the need for redundant computations.
 \subsubsection{Implementation and Methodology}
-The RASTiC algorithm states that if the following assertions hold true we can be confident that the output is valid.
+The \ac{RASTiC} algorithm states that if the following assertions hold true we can be confident that the output is valid.
 
 \begin{align*}
     \begin{aligned}
@@ -115,23 +214,78 @@ The RASTiC algorithm states that if the following assertions hold true we can be
         &\text{Lastly we must ensure that} \\
         &\qquad \begin{aligned}
         \begin{cases}
-            F(\text{R}{[A+B-1]}) = \text{E} & \text{if } \text{R}{[A+B-1]} \text{ is the }<\text{end}> \text{ token} \\
-            F(\text{R}{[A+B-1]}) = F(\text{R}{[A+B]}) & \text{if } \text{R} \text{ has length } \text{T}
+            F(\text{R}_{[A+B-1]}) = \text{E} & \text{if } \text{R}_{[A+B-1]} \text{ is the }<\text{end}> \text{ token} \\
+            F(\text{R}_{[A+B-1]}) = F(\text{R}_{[A+B]}) & \text{if } \text{R} \text{ has length } \text{T}
         \end{cases}
         \end{aligned}
     \end{aligned}
 \end{align*}
 
-\subsubsection{Performance Evaluation}
-\subsubsection{Potential Attacks and Exploits}
+\subsection{Evaluation}
+
+The chances of a false positive using \ac{RASTiC} can be calculated as follows. 
+Suppose we have two sequences of numbers, each with 50,257 tokens (e.g., using GPT-2 as an example). 
+If we choose 3 random indices in each sequence, the probability that the numbers match at all 3 indices is:
+
+\begin{align*}
+\text{Probability of a match} &= \frac{1}{50,257^3} \
+&= 7.78 \times 10^{-15}.
+\end{align*}
+
+Therefore, the chances of a false positive in \ac{RASTiC} are extremely low, even with a smaller vocabulary size such as with GPT-2.
+
+\subsection{Rationale}
+Sample a subset of the data.
+Test for continuity, integrity, and truncation:
+\begin{itemize}
+    \item Continuity: Ensure that the output is connected to the input. This prevents a case where the output is generated, but is unrelated to the input. 
+    This would produce a message where the linkage of tokens is relatively connected, but would be broken at the intersection of the input and output token arrays.
+    \item Integrity: Randomly test the interior tokens. 
+    Since any one token can be tested it enforces the content of the message to not only be genuinely generated, but also ensures that it hasn't been tampered with since tampering would break every token after it.
+    \item Truncation: Ensure that the message has not been truncated. Ensure that an $\langle$end$\rangle$ token has been reached and that the compute note did not prematurely truncate the completion.
+\end{itemize}
+ With these tests, we can be fairly sure of the integrity of the entire output.
+
+
+\subsubsection*{Potential Attacks and Exploits}
+
+There are a couple of exploits that we can foresee being used to bypass the algorithm.
+
+\begin{enumerate}
+    \item \textbf{Repetition:} By using very repetitive outputs, we could theoretically force a false positive. 
+    For example, if the tokens for 1 2 3 4 5 6 are seen one after each other, the language model may latch onto the pattern and fill the rest of the output with the pattern, allowing the compute node to bypass expensive computation. 
+    However, this is why we test for continuity. 
+    Theoretically, the only exploitable inputs would be highly repetitive, and even then, we haven't achieved anything since we can't deviate from the pattern, the pattern that is very close or is correct. 
+    However, we do see this as a possible path for exploitation in the future.
+    \item \textbf{Trends towards truncation:} While we weren't able to produce such a token, sequences could be forced to quickly generate the $\langle$end$\rangle$ token early. However, the node would need to be able to do this more than 51\% of the time or would lose money through slashed stakes.
+    \item \textbf{Inference:} Theoretically, because of the limited vocabulary of everyday inputs, lazy prediction algorithms could be used to predict words without computing exploits. But, if the node were able to do this effectively enough, this is but an evolution of the network since it would need to be right at least 51\% of the time as not to lose money.
+\end{enumerate}
 
 \section{Challenges and Limitations}
-\subsection{Privacy}
+\subsubsection{Homomorphic Encryption}
 \subsection{Inefficient Delegation}
 
 \section {Future Aspirations}
 \subsection{Distributed Training}
-\subsection{Proof of Stake}
+In the process of creating a self-incentivizing economy, we aim to build an enormous collection of compute power. 
+With this, we can allow for distributed training of the model, and create regular checkpoints to track progress. 
+We believe that nodes will have a strong incentive to contribute to this effort, as the better the model, the more in demand the network will be. 
+This will increase the cost per token, which compute nodes can sell back to clients, creating a self-sustaining ecosystem. 
+Therefore, we will not need to provide monetary incentives for nodes to participate in this process.
+
+\subsubsection {Federated Averaging}
+Federated learning allows for a democratic training process, where the model is shaped by the collective power of the network. 
+This allows any data to be slowly incorporated into the model. 
+In this process, nodes are free to train any dataset they wish to see incorporated into the model. At set blockchain heights, nodes take time to slow average out their weights with their peers, creating a centralized model which can be agreed upon through several stages of proof of work. 
+The specifics of the federated averaging process would need to be explored in detail at a later date.
+
+\subsection{Proof Of Stake}
+
+In the future, we hope to switch over to a proof of stake model. 
+This is a challenging task for an emerging coin, as without a large market cap, a minority can take over a large portion of the voting. 
+However, once the coin has stabilized and has a sufficient market cap, we plan to follow in the footsteps of Ethereum and make the switch. 
+By doing so, we will be able to eliminate the wasteful compute associated with traditional Proof-Of-Work and move towards a more sustainable and eco-friendly system.
+
 \subsection{Improved Privacy}    
 \subsection{Using job completion as POW}
 
