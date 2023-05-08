@@ -4,15 +4,9 @@
 \usepackage{amsmath}
 \usepackage{acronym}
 \usepackage{url}
-\usepackage{draftwatermark}
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{float}
-
-
-% \SetWatermarkText{DRAFT}
-\SetWatermarkColor[gray]{0.95}
-\SetWatermarkScale{8}
 
 \newcommand{\Function}[2]{\textbf{function}\ \textsc{#1}(#2)}
 
@@ -41,7 +35,7 @@
     {\large May 5, 2023\par}
   \end{titlepage}
 
-\section{Abstract}
+\begin{abstract}
 CamelidCoin is a trustless, incentive-based blockchain protocol designed for distributed auto-regressive large language model (LLM) computation and training. 
 The system is built on a peer-to-peer network where lightweight clients can submit input for completion by a large pool of compute nodes. 
 In exchange for their work, the compute nodes are compensated by the client. 
@@ -50,10 +44,17 @@ This algorithm quickly verifies the output's authenticity with near certainty.
 Additionally, throughout the paper, we will detail the protocol's structure and specifics.
 Our protocol works off of the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin and modifies it to fit our use case. 
 We will also discuss current challenges and limitations with our current protocol.
+\end{abstract}
 
 \tableofcontents
 
 \section{Introduction}
+CamelidCoin is a novel blockchain protocol that provides a trustless and incentive-based system for distributed auto-regressive large language model (LLM) computation and training. 
+In this system, lightweight clients can submit input for completion by a large pool of compute nodes who are compensated for their work. 
+However, to ensure the validity of the output from these compute nodes, a new algorithm called Random Autoregressive Subsampling for Token Integrity Checking (RASTiC) has been proposed in this paper. 
+RASTiC algorithm can be completed either by the client or other compute nodes, and it quickly verifies the output's authenticity with near certainty.
+
+In this paper, we will detail the structure and specifics of the CamelidCoin protocol, which is built on a peer-to-peer network. The protocol modifies the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin to fit the use case of LLM computation and training. We will also discuss the current challenges and limitations of our protocol.
 \subsection{Related Work}
 The concept of distributed computation is not new, and several existing projects utilize it for various purposes.
 
