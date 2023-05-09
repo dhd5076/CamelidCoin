@@ -1,7 +1,9 @@
 import net from 'net'
-import { JobManager } from '../jobManager';
-import { Message, MessageHandler } from './message';
-import { logger } from '../utils/logger'
+//TODO update to use export default if no other classes to import from modules
+import { JobManager } from '../model/jobManager.js'
+import { Message } from './message.js';
+import { MessageHandler } from './messageHandler.js';
+import logger from '../utils/logger.js'
 
 /**
  * @class Node Client
@@ -13,11 +15,12 @@ export class Client {
      * @param {Number} port starting port
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      */
-    constructor(seedPeers = []) {
+    constructor(port, seedPeers = []) {
         logger.debug(`New tcp client created with ${seedPeers.length} peers.`)
         this.messageHandler = new MessageHandler(this.sendMessage);
         this.jobManager = new JobManager(this.messageHandler)
         this.messageHandler.registerHandler('')
+        this.port = port
         if(seedPeers.length > 0) {
             this.seedPeers = seedPeers;
             this.peers = [];
@@ -44,8 +47,8 @@ export class Client {
                 this.handleConnection(connection);
             })
 
-            server.listen(0, () => {
-                console.log("Listening for incoming connections");
+            server.listen(this.port, () => {
+                //TODO add debug
             })
 
             await this.seedPeers.forEach(peer => {
@@ -98,14 +101,4 @@ export class Client {
     }
 }
 
-const a = new Client(255, [{
-    host: 'localhost',
-    port:256
-}])
-a.init();
-
-const b = new Client(256, [{
-    host: 'localhost',
-    port: 255
-}]);
-b.init();
+export default Client;

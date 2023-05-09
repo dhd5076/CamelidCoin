@@ -2,8 +2,9 @@
  * @module JobScheduler used for managing job pool
  */
 
-import { MessageHandler, Message } from "./message";
-import { Job } from './job';
+import { Message } from "../networking/message.js";
+import { MessageHandler } from "../networking/messageHandler.js";
+import { Job } from './job.js';
 
 /**
  * Used for managing scheduling and managing jobs

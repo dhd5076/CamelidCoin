@@ -1,7 +1,5 @@
 import crypto from 'crypto';
 
-const forwardableMessages = [TYPES.JOB_NEW, TYPES.JOB_ACCEPTED. TYPES.JOB_COMPLETED]
-
 /**
  * @class Message
  */
@@ -16,6 +14,7 @@ export class Message {
         this.type = type;
         this.payload = payload;
         this.hash = hash;
+        const forwardableMessages = [Message.TYPES.JOB_NEW, Message.TYPES.JOB_ACCEPTED. Message.TYPES.JOB_COMPLETED]
     }
 
     static get TYPES() {
