@@ -3,7 +3,7 @@
  * @module Wallet
  * @author Dylan Dunn
  */
-const { KeyPair } = require('./utils/cryptoUtils')
+const { KeyPair } = require('../utils/cryptoUtils')
 
 /**
  * @class Wallet

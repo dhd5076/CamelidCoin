@@ -75,7 +75,7 @@ export class Job {
             
         }
         return new Promise((resolve, reject) => {
-
+            
         })
     }
 }

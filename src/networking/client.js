@@ -9,16 +9,17 @@ import logger from '../utils/logger.js'
  * @class Node Client
  * The TCP client for connecting to nearby nodes
  */
-export class Client {
+class Client {
     /**
      * Create a new socket instance
      * @param {Number} port starting port
      * @param {Peer[]} seedPeers seed peers for creating initial connections
+     * @param {Boolean} fullNode run as full node, otherwise runs as lightweight client
      */
     constructor(port, seedPeers = []) {
         logger.debug(`New tcp client created with ${seedPeers.length} peers.`)
         this.messageHandler = new MessageHandler(this.sendMessage);
-        this.jobManager = new JobManager(this.messageHandler)
+        this.jobManager = new JobManager(this.messageHandler, fullNode)
         this.messageHandler.registerHandler('')
         this.port = port
         if(seedPeers.length > 0) {

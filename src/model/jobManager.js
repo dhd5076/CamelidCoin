@@ -12,10 +12,14 @@ import { Job } from './job.js';
 export class JobManager {
   /**
    * @param {MessageHandler} messageHandler used for sending messages
+   * @param {Boolean} fullNode full node will accept new jobs
    */
-  constructor(messageHandler) {
+  constructor(messageHandler, fullNode) {
     this.jobs = new Map();
-    this.acceptingJobs = true;
+    this.acceptingJobs = fullNode;
+    this.awaitingCompletion = false; // Set to true when we have submitted a job and are waiting on completion
+    this.submittedJobs = [] // Array of IDs of jobs we are waiting for to be completed
+    this.fullNode = true;
     messageHandler.registerHandler('JOB_NEW', this.handleNewJobMessage);
     messageHandler.registerHandler('JOB_ACCEPTED', this.handleJobAcceptedMessage);
     messageHandler.registerHandler('JOB_COMPLETED', this.handleJobCompletedMessage);
@@ -35,7 +39,22 @@ export class JobManager {
         reject(new Error("Not accepting new jobs."))
       }
     })
-  } 
+  }
+
+
+  /**
+   * Submit job to network
+   */
+  submitJob() {
+
+  }
+
+  /**
+   * Handle completed job
+   */
+  onCompletedJob() {
+
+  }
 
   /**
    * Get a job by id
