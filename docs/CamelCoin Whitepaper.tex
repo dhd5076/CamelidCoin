@@ -20,7 +20,7 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{.5cm}
-    {\small Revision 1.0.0 \\}
+    {\small Revision 1.0.3 \\}
     \vspace{1cm}
     {\fontsize{40}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
@@ -29,7 +29,7 @@
     {\Large Dylan Dunn \\}
     {\Large contact@dylandunn.me \\}
     \vspace{1cm}
-    \url{https://camelcoin.org}
+    \url{https://camelidcoin.org}
     \vspace{0.5cm}
     \vfill
     {\large May 5, 2023\par}
@@ -265,7 +265,7 @@ Full nodes are responsible for completing the validation process as it ensures t
 The client will not receive any free computation, as only the hash of the single token completion is returned. 
 This mechanism prevents clients from attempting to obtain free completions by sending verification requests one token at a time.
 
-\subsection{Evaluation}
+\subsubsection{Evaluation}
 
 The chances of a false positive using \ac{RASTiC} can be calculated as follows. 
 Suppose we have two sequences of numbers, each with 50,257 tokens (e.g., using GPT-2 as an example). 
@@ -278,7 +278,7 @@ If we choose 3 random indices in each sequence, the probability that the numbers
 
 Therefore, the chances of a false positive in \ac{RASTiC} are extremely low, even with a smaller vocabulary size such as with GPT-2.
 
-\subsection{Rationale}
+\subsubsection{Rationale}
 Sample a subset of the data.
 Test for continuity, integrity, and truncation:
 \begin{itemize}
@@ -306,6 +306,9 @@ There are a couple of exploits that we can foresee being used to bypass the algo
     \item \textbf{Inference:} Theoretically, because of the limited vocabulary of everyday inputs, lazy prediction algorithms could be used to predict words without use of the official model.
      But, if the node were able to do this effectively enough, this is but an evolution of the network since it would need to be right at least 51\% of the time as not to lose money.
 \end{enumerate}
+
+\subsection{Model}
+\subsubsection{Distribution}
 
 \section{Key Benefits}
 \subsection{Censorship-Proof}
