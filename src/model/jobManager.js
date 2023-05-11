@@ -20,9 +20,10 @@ export class JobManager {
     this.awaitingCompletion = false; // Set to true when we have submitted a job and are waiting on completion
     this.submittedJobs = [] // Array of IDs of jobs we are waiting for to be completed
     this.fullNode = true;
-    messageHandler.registerHandler('JOB_NEW', this.handleNewJobMessage);
+    messageHandler.registerHandler('JOB_CREATED', this.handleNewJobMessage);
     messageHandler.registerHandler('JOB_ACCEPTED', this.handleJobAcceptedMessage);
     messageHandler.registerHandler('JOB_COMPLETED', this.handleJobCompletedMessage);
+    messageHandler.registerHandler('JOB_GET_INFO', this.handleJobGetInfoMessage);
   }
 
   /**
@@ -41,18 +42,65 @@ export class JobManager {
     })
   }
 
-
   /**
-   * Submit job to network
+   * Handle request for job info
+   * @param message.
    */
-  submitJob() {
-
+  handleJobGetInfoMessage(message) {
+    if(message.job.id) {
+      if(this.jobs.has(message.job.id)) {
+        message.
+      }
+    } else {
+      throw new Error("Cannot get job info: Invalid Job Info Request Message")
+    }
   }
 
   /**
-   * Handle completed job
+   * 
+   * @param {Message} message 
    */
-  onCompletedJob() {
+  handleNewJobMessage(message) {
+    if(this.acceptingJobs && message.job) {
+      Job.validate(message.job)
+      .then((isValid) => {
+        if(isValid) {
+          this.setCurrentJob(message.payload.job);
+          const message = new Message('JOB_ACCEPTED', {
+            job: {
+              id: message.job.hash
+            }
+          })
+          this.sendMessage(message);
+        } else {
+          throw new Error('Could not pickup job: Invalid Job')
+        }
+      })
+    }
+  }
+
+  /**
+   * Handle job accepted message
+   * @param {Message} message 
+   */
+  handleJobAcceptedMessage(message) {
+    
+  }
+
+  /**
+   * 
+   * @param {Message} message 
+   */
+  handleJobCompletedMessage(message) {
+
+  }
+
+
+  /**
+   * Submit job to network
+   * @param {Job} job
+   */
+  submitJob(job) {
 
   }
 
@@ -111,36 +159,4 @@ export class JobManager {
       }
     })
   }
-
-  /**
-   * @param {Message} message 
-   */
-  handleMessage(message) {
-    return new Promise((resolve, reject) => {
-      switch(message.subtype) {
-        case STATE.CREATED:
-          if(this.acceptingJobs) {
-            Job.validate(message.job)
-            .then((isValid) => {
-              if(isValid && message.job.state) {
-                this.setCurrentJob(message.payload.job);
-                const message = new Message('JOB', 'PICKEDUP', j)
-                this.sendMessage(message);
-                resolve();
-              } else {
-                reject(new Error(`Invalid message`))
-              }
-            })
-          }
-          break;
-        case STATE.PICKEDUP:
-          break;
-        case STATE.PAID:
-          break;
-        case STATE.COMPLETED:
-        break;
-      }
-    })
-  }
-
 }

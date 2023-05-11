@@ -20,7 +20,7 @@ class Client {
         logger.debug(`New tcp client created with ${seedPeers.length} peers.`)
         this.messageHandler = new MessageHandler(this.sendMessage);
         this.jobManager = new JobManager(this.messageHandler, fullNode)
-        this.messageHandler.registerHandler('')
+        this.messageHandler.registerHandler('');
         this.port = port
         if(seedPeers.length > 0) {
             this.seedPeers = seedPeers;
@@ -74,15 +74,28 @@ class Client {
      * @param {net.Socket} connection 
      */
     handleConnection(connection) {
+        // Handle client connection
         connection.on('data', (data) => {
+            const message = Message.fromBuffer(data);
+            /**
+             * Used for replying to a node
+             * @param {Message} msgToSend message to send to reply with
+             */
+            this.message.reply = (msgToSend) => {
+                msgToSend.serialize()
+                .then((serializedMessage) => {
+                    connection.write(serializedMessage);
+                })
+            }
             this.messageHandler.handleMessage(Message.fromBuffer(data));
         });
 
+        // Handle peer disconnection
         connection.on('close', () => {
             this.peers = this.peers.filter(peer => peer.connection !== connection);
         });
 
-        connection.on('error', (err) => {
+        connection.on('error', (error) => {
             throw new Error(error);
         });
     }
@@ -95,7 +108,8 @@ class Client {
         return new Promise((resolve, reject) => {
             this.peers.forEach(peer => {
                 const socket = peer.connection;
-                socket.write(message.toBuffer());
+                message.serialize()
+                .then((serializedMessage))
             });
             resolve();
         });

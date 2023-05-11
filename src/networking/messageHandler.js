@@ -37,14 +37,14 @@ export class MessageHandler {
 
             const handler = this.handlers.get(message.type);
             if (!handler) {
-                //TODO: handle this for invalid message types
                 reject(new Error(`No handler registered for message type ${message.type}`));
-            };
-            handler(message, reply);
-            if(this.shouldForward(message)) {
-                this.sendMessage(message, this.sendMessage);
+            } else {
+                handler(message, reply);
+                if(this.shouldForward(message)) {
+                    this.sendMessage(message, this.sendMessage);
+                }
+                resolve();
             }
-            resolve();
         });
     }
 

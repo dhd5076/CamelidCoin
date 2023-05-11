@@ -14,15 +14,6 @@ export class Message {
         this.type = type;
         this.payload = payload;
         this.hash = hash;
-        const forwardableMessages = [Message.TYPES.JOB_NEW, Message.TYPES.JOB_ACCEPTED. Message.TYPES.JOB_COMPLETED]
-    }
-
-    static get TYPES() {
-        return {
-        JOB_NEW: 0,
-        JOB_ACCEPTED: 1,
-        JOB_COMPLETED: 2,
-        }
     }
 
     /**
@@ -70,9 +61,13 @@ export class Message {
      */
     static fromBuffer(buffer) {
         return new Promise((resolve, reject) => {
+            try {
             const json = buffer.toString('utf8').substring(3);
             const rawObject = JSON.parse(json);
             resolve(new Message(rawObject.command, rawObject.payload))
+            } catch (error) {
+                reject(error);
+            }
         });
     }
 }
