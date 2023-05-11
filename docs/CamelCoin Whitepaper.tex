@@ -102,8 +102,19 @@ When a node receives a message, it checks the header to determine the type of me
 If the message is intended for the node, it processes the payload and sends a response if necessary.
 If the message is not intended for the node, it forwards it to the appropriate recipient based on the message header.
 \subsection{Wallet}
+In the world of digital currencies, wallets play a crucial role as they serve as a keypair that facilitates transactions. 
+The public key in the wallet is utilized to provide proof of ownership of funds, while the private key is responsible for signing off on transactions. 
+To ensure secure and efficient transfer of funds, a hash of the public key is used to designate the destination of funds. 
+This method enables the recipient to receive funds without disclosing their public key, which enhances their privacy and security.
+
+To avoid errors, a checksum is appended to the address, which prevents the accidental sending of funds to non-existent addresses or mistyped addresses. 
+To enhance security, Base58 encoding is utilized to represent the public key hash since it eliminates several non-Latin characters and similar-looking characters, making it less prone to errors.
+
+In addition, private keys are used to sign off on data, ensuring that bad actors are held accountable in the event of malicious or malformed data. 
+This commitment and traceability ensure the security of the network, thereby safeguarding the interests of all participants.
 \subsubsection{Keypair Creation}
-To create a new keypair, we use the Elliptic Curve Digital Signature Algorithm (ECDSA) with the secp256k1 curve, the same algorithm used by Bitcoin. The process for creating a new keypair is as follows:
+To create a new keypair, we use the Elliptic Curve Digital Signature Algorithm (ECDSA) with the secp256k1 curve, the same elliptic curve used by Bitcoin. 
+The process for creating a new keypair is as follows:
 
 \begin{enumerate}
 \item Generate a new private key $k$, which is a random 256-bit integer.
@@ -295,6 +306,9 @@ There are a couple of exploits that we can foresee being used to bypass the algo
     \item \textbf{Inference:} Theoretically, because of the limited vocabulary of everyday inputs, lazy prediction algorithms could be used to predict words without use of the official model.
      But, if the node were able to do this effectively enough, this is but an evolution of the network since it would need to be right at least 51\% of the time as not to lose money.
 \end{enumerate}
+
+\section{Key Benefits}
+\subsection{Censorship-Proof}
 
 \section{Challenges and Limitations}
 \subsection{Privacy}
