@@ -81,13 +81,13 @@ class Client {
              * Used for replying to a node
              * @param {Message} msgToSend message to send to reply with
              */
-            this.message.reply = (msgToSend) => {
+            const reply = (msgToSend) => {
                 msgToSend.serialize()
                 .then((serializedMessage) => {
                     connection.write(serializedMessage);
                 })
             }
-            this.messageHandler.handleMessage(Message.fromBuffer(data));
+            this.messageHandler.handleMessage(Message.fromBuffer(data), reply);
         });
 
         // Handle peer disconnection

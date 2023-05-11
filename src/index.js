@@ -2,7 +2,7 @@
  * Entrypoint of the application
  */
 import readline from 'readline';
-import Client from './networking/network.js'
+import Client from './networking/client.js'
 
 const client = new Client(25565, [{
   host: '192.168.1.11',

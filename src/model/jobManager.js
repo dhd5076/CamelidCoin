@@ -17,8 +17,7 @@ export class JobManager {
   constructor(messageHandler, fullNode) {
     this.jobs = new Map();
     this.acceptingJobs = fullNode;
-    this.awaitingCompletion = false; // Set to true when we have submitted a job and are waiting on completion
-    this.submittedJobs = [] // Array of IDs of jobs we are waiting for to be completed
+    this.waitingForCompletion = [] // Array of IDs of jobs we are waiting for to be completed
     this.fullNode = true;
     messageHandler.registerHandler('JOB_CREATED', this.handleNewJobMessage);
     messageHandler.registerHandler('JOB_ACCEPTED', this.handleJobAcceptedMessage);
@@ -49,7 +48,7 @@ export class JobManager {
   handleJobGetInfoMessage(message) {
     if(message.job.id) {
       if(this.jobs.has(message.job.id)) {
-        message.
+        message.reply(new Message('JOB_INFO', this.jobs.get(message.job.id)))
       }
     } else {
       throw new Error("Cannot get job info: Invalid Job Info Request Message")
@@ -92,7 +91,15 @@ export class JobManager {
    * @param {Message} message 
    */
   handleJobCompletedMessage(message) {
+    if(Job.validate(message.job)) {
+      if(this.jobs.has(message.job.hash)) {
 
+      } else {
+        this.jobs.set(message.job.hash, message.job);
+      }
+    } else {
+      throw new Error("Cannot handle completed job message: Invalid Job")
+    }
   }
 
 
@@ -100,21 +107,23 @@ export class JobManager {
    * Submit job to network
    * @param {Job} job
    */
-  submitJob(job) {
-
+  createAndBroadcastJob(job) {
+    const message = new Message('JOB_CREATED', job);
+    this.waitingForCompletion.push(job.hash)
+    this.messageHandler.sendMessage(message);
   }
 
   /**
    * Get a job by id
-   * @param {String} id job identifier
+   * @param {String} hash job identifier
    * @returns {Promise.<Job, Error>}  
    */
-  getJob(id) {
+  getJob(hash) {
     return new Promise((resolve, reject) => {
-      if(this.jobs.has(id)) {
-        resolve(this.jobs.get(id))
+      if (this.jobs.has(hash)) {
+        resolve(this.jobs.get(hash))
       } else {
-        reject(new Error(`Job with ID: ${id} not found.`))
+        reject(new Error(`Job with ID: ${hash} not found.`))
       }
     })
   }
@@ -123,40 +132,28 @@ export class JobManager {
    * Add a job to the job pool
    * @param {Job} job job to be added
    */
-  addJob(id, job) {
-    if(!this.jobs.has(id)) {
-      lthis.jobs.set(job.hash, job)
-    }
+  addJob(job) {
+    return new Promise((resolve, reject) => {
+      if (!Job.validate(job)) {
+        reject(new Error("Cannot add job to pool: Invalid Job"))
+      } else if (!this.jobs.has(job.hash)) {
+        this.jobs.set(job.hash, job)
+      }
+    })
   }
 
   /**
    * Remove a job from the job pool
-   * @param id the id of the job to remove
+   * @param hash the hash of the job to remove
    */
-  removeJob(id) {
+  removeJob(hash) {
     return new Promise((resolve, reject) => {
-      if(this.jobs.has(id)) {
-        this.jobs.delete(id)
+      if(this.jobs.has(hash)) {
+        this.jobs.delete(hash)
         resolve();
       } else {
         reject(new Error(`Job doesn't exist`));
       }
     });
-  }
-
-  /**
-   * Replace job with new job
-   * @param {*} id 
-   * @param {Job} job 
-   */
-  updateJob(id, job) {
-    return new Promise((resolve, reject) => {
-      if(this.jobs.has(id)) {
-        this.jobs.set(id, job)
-        resolve();
-      } else {
-        reject();
-      }
-    })
   }
 }
