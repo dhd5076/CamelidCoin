@@ -7,7 +7,8 @@ import Client from './networking/client.js'
 const client = new Client(25565, [{
   host: '192.168.1.11',
   port: '25565'
-}]);
+}], true);
+
 client.init()
 .then(() => {
   const rl = readline.createInterface({

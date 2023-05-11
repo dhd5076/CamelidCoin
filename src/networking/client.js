@@ -16,7 +16,7 @@ class Client {
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      * @param {Boolean} fullNode run as full node, otherwise runs as lightweight client
      */
-    constructor(port, seedPeers = []) {
+    constructor(port, seedPeers = [], fullNode) {
         logger.debug(`New tcp client created with ${seedPeers.length} peers.`)
         this.messageHandler = new MessageHandler(this.sendMessage);
         this.jobManager = new JobManager(this.messageHandler, fullNode)
