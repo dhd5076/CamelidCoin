@@ -1,7 +1,7 @@
 ![CamelidCoin Logo](./docs/logo.png)
 ## CamelidCoin
 
-*This reposity is still a work in progress, but the protocol has been detailed in the whitepaper.*
+*This repository is still a work in progress, but the protocol has been detailed in the whitepaper.*
 
 Read the whitepaper here: [CamelidCoin Whitepaper](https://www.camelidcoin.org/whitepaper.pdf)
 
