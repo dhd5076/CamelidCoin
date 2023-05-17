@@ -14,7 +14,7 @@ class Wallet {
      * @param {KeyPair} keyPair Keypair to use to generate the wallet
      */
     constructor(keyPair) {
-        console.log("New Wallet Created")
+        console.log("New Wallet Created");
         this.keyPair = keyPair;
     }
 

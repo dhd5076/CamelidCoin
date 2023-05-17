@@ -23,19 +23,17 @@ class Client {
         this.messageHandler.registerHandler('');
         this.port = port
         if(seedPeers.length > 0) {
-            this.seedPeers = seedPeers;
-            this.peers = [];
+            this.peers = seedPeers;
         } else {
             throw new Error("Seed peers are required for client instance");
         }
     }
 
     /**
-     * Handles GetPeers command
+     * Handles LIST_PEERS command
      */
     handleGetPeersMessage(message, reply) {
-        ///const message = new Message('')
-        //TODO: Implement replying to user with list of peers
+        reply(new Message('LIST_PEERS', this.peers));
     }
 
     /**
@@ -45,14 +43,15 @@ class Client {
         return new Promise(async (resolve, reject) => {
 
             const server = await net.createServer((connection) => {
+                logger.debug(`New connection from ${connection.remoteAddress}:${connection.remotePort}`);
                 this.handleConnection(connection);
             })
 
             server.listen(this.port, () => {
-                //TODO add debug
+                logger.debug(`Server listening on port ${this.port}`);
             })
 
-            await this.seedPeers.forEach(peer => {
+            await this.peers.forEach(peer => {
                 const connection = net.createConnection({
                     host: peer.address,
                     port: peer.port
@@ -61,7 +60,7 @@ class Client {
                     this.handleConnection(connection)
                 })
                 connection.on('error', (error) => {
-                    console.error(`Error connecting to peer ${peer.address}:${peer.port}: ${error.message}`);
+                    logger.error(`Error connecting to peer ${peer.address}:${peer.port}: ${error.message}`)
                 })
                 peer.connection = connection;
             })
@@ -86,17 +85,21 @@ class Client {
                 .then((serializedMessage) => {
                     connection.write(serializedMessage);
                 })
+                .catch((error) => {
+                    logger.error(`Error serializing message: ${error.message}`);
+                })
             }
             this.messageHandler.handleMessage(Message.fromBuffer(data), reply);
         });
 
         // Handle peer disconnection
         connection.on('close', () => {
+            logger.debug(`Peer ${connection.remoteAddress}:${connection.remotePort} disconnected`);
             this.peers = this.peers.filter(peer => peer.connection !== connection);
         });
 
         connection.on('error', (error) => {
-            throw new Error(error);
+            logger.error(`Error with connection to ${connection.remoteAddress}:${connection.remotePort}: ${error.message}`);
         });
     }
 
