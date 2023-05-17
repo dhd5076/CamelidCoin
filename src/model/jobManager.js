@@ -80,10 +80,21 @@ export class JobManager {
 
   /**
    * Handle job accepted message
+   * Updates our known job status and optionally drops current job if it's identical
    * @param {Message} message 
    */
   handleJobAcceptedMessage(message) {
-    
+    return new Promise((resolve, reject) => {
+      if(Job.validate(message.job)) {
+        const jobToModify = this.jobs.get(message.job.id);
+        jobToModify.state = Job.JOBSTATE.PICKEDUP;
+        this.jobs.set(message.job.id, jobToModify);
+        resolve();
+        //TODO: Drop job optionally
+      } else {
+        reject(new Error("Cannot handle accepted job message: Invalid Job"))
+      }
+    })
   }
 
   /**
