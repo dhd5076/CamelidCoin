@@ -76,20 +76,12 @@ class Client {
         // Handle client connection
         connection.on('data', (data) => {
             const message = Message.fromBuffer(data);
-            /**
-             * Used for replying to a node
-             * @param {Message} msgToSend message to send to reply with
-             */
-            const reply = (msgToSend) => {
-                msgToSend.serialize()
-                .then((serializedMessage) => {
-                    connection.write(serializedMessage);
-                })
-                .catch((error) => {
-                    logger.error(`Error serializing message: ${error.message}`);
-                })
-            }
-            this.messageHandler.handleMessage(Message.fromBuffer(data), reply);
+            this.messageHandler.handleMessage(Message.fromBuffer(data))
+            .then((message) => {
+                if(message) {
+                    this.sendMessage(message);
+                }
+            });
         });
 
         // Handle peer disconnection

@@ -43,39 +43,47 @@ export class JobManager {
 
   /**
    * Handle request for job info
-   * @param message.
+   * @param message Message to handle
    */
   handleJobGetInfoMessage(message) {
-    if(message.job.id) {
-      if(this.jobs.has(message.job.id)) {
-        message.reply(new Message('JOB_INFO', this.jobs.get(message.job.id)))
+    return new Promise((resolve, reject) => {
+      if(message.job.id) {
+        if(this.jobs.has(message.job.id)) {
+          message.reply(new Message('JOB_INFO', this.jobs.get(message.job.id)))
+          resolve();
+        }
+      } else {
+        reject(new Error("Cannot get job info: Invalid Job Info Request Message"));
       }
-    } else {
-      throw new Error("Cannot get job info: Invalid Job Info Request Message")
-    }
+    })
   }
 
   /**
-   * 
+   * Handles new job message
    * @param {Message} message 
    */
   handleNewJobMessage(message) {
-    if(this.acceptingJobs && message.job) {
-      Job.validate(message.job)
-      .then((isValid) => {
-        if(isValid) {
-          this.setCurrentJob(message.payload.job);
-          const message = new Message('JOB_ACCEPTED', {
-            job: {
-              id: message.job.hash
-            }
-          })
-          this.sendMessage(message);
-        } else {
-          throw new Error('Could not pickup job: Invalid Job')
-        }
-      })
-    }
+    return new Promise((resolve, reject) => {
+      if(this.acceptingJobs && message.job) {
+        Job.validate(message.job)
+        .then((isValid) => {
+          if(isValid) {
+            this.setCurrentJob(message.payload.job)
+            .then(() => {
+              const message = new Message('JOB_ACCEPTED', {
+                job: {
+                  id: message.job.hash
+                }
+              })
+              this.sendMessage(message);
+              resolve();
+            });
+          } else {
+            reject(new Error('Could not pickup job: Invalid Job'));
+          }
+        })
+      }
+    });
   }
 
   /**
