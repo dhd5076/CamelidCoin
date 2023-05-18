@@ -1,35 +1,38 @@
-\contentsline {section}{\numberline {1}Introduction}{2}{}%
-\contentsline {subsection}{\numberline {1.1}Related Work}{2}{}%
-\contentsline {section}{\numberline {2}Technical Overview}{3}{}%
-\contentsline {subsection}{\numberline {2.1}Network}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.1}Peer Discovery}{3}{}%
-\contentsline {subsubsection}{\numberline {2.1.2}Messaging Protocol}{3}{}%
+\contentsline {section}{\numberline {1}Introduction}{3}{}%
+\contentsline {subsection}{\numberline {1.1}Related Work}{3}{}%
+\contentsline {section}{\numberline {2}Technical Overview}{4}{}%
+\contentsline {subsection}{\numberline {2.1}Network}{4}{}%
+\contentsline {subsubsection}{\numberline {2.1.1}Peer Discovery}{4}{}%
+\contentsline {subsubsection}{\numberline {2.1.2}Messaging Protocol}{4}{}%
 \contentsline {subsection}{\numberline {2.2}Wallet}{4}{}%
-\contentsline {subsubsection}{\numberline {2.2.1}Keypair Creation}{4}{}%
-\contentsline {subsubsection}{\numberline {2.2.2}Public Address}{4}{}%
+\contentsline {subsubsection}{\numberline {2.2.1}Keypair Creation}{5}{}%
+\contentsline {subsubsection}{\numberline {2.2.2}Public Address}{5}{}%
 \contentsline {subsection}{\numberline {2.3}Transaction}{5}{}%
-\contentsline {subsubsection}{\numberline {2.3.1}Proof of Work}{5}{}%
-\contentsline {subsection}{\numberline {2.4}Jobs}{6}{}%
-\contentsline {subsubsection}{\numberline {2.4.1}Job Pool}{6}{}%
-\contentsline {subsubsection}{\numberline {2.4.2}Dispute Resolution}{7}{}%
-\contentsline {subsection}{\numberline {2.5}\ac {RASTiC} (Random Autoregressive Subsampling for Token Integrity Checking)}{7}{}%
-\contentsline {subsubsection}{\numberline {2.5.1}Problem Statement and Motivation}{7}{}%
-\contentsline {subsubsection}{\numberline {2.5.2}Implementation and Methodology}{8}{}%
-\contentsline {subsubsection}{\numberline {2.5.3}Outsourced Verification}{8}{}%
-\contentsline {subsubsection}{\numberline {2.5.4}Evaluation}{9}{}%
-\contentsline {subsubsection}{\numberline {2.5.5}Rationale}{9}{}%
-\contentsline {subsection}{\numberline {2.6}Model}{10}{}%
+\contentsline {subsubsection}{\numberline {2.3.1}Proof of Work}{6}{}%
+\contentsline {subsection}{\numberline {2.4}Jobs}{7}{}%
+\contentsline {subsubsection}{\numberline {2.4.1}Job Pool}{7}{}%
+\contentsline {subsubsection}{\numberline {2.4.2}Dispute Resolution}{8}{}%
+\contentsline {subsection}{\numberline {2.5}\ac {RASTiC} (Random Autoregressive Subsampling for Token Integrity Checking)}{8}{}%
+\contentsline {subsubsection}{\numberline {2.5.1}Problem Statement and Motivation}{8}{}%
+\contentsline {subsubsection}{\numberline {2.5.2}Implementation and Methodology}{9}{}%
+\contentsline {subsubsection}{\numberline {2.5.3}Outsourced Verification}{9}{}%
+\contentsline {subsubsection}{\numberline {2.5.4}Evaluation}{10}{}%
+\contentsline {subsubsection}{\numberline {2.5.5}Rationale}{10}{}%
+\contentsline {subsection}{\numberline {2.6}Model}{11}{}%
 \contentsline {subsubsection}{\numberline {2.6.1}Distribution}{11}{}%
-\contentsline {subsubsection}{\numberline {2.6.2}Parallelism}{11}{}%
-\contentsline {subsubsection}{\numberline {2.6.3}Training}{11}{}%
-\contentsline {section}{\numberline {3}Key Benefits}{11}{}%
-\contentsline {subsection}{\numberline {3.1}Censorship-Proof}{11}{}%
-\contentsline {section}{\numberline {4}Challenges and Limitations}{11}{}%
-\contentsline {subsection}{\numberline {4.1}Privacy}{11}{}%
-\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{12}{}%
-\contentsline {subsection}{\numberline {4.2}Inefficient Delegation}{12}{}%
-\contentsline {section}{\numberline {5}Future Aspirations}{12}{}%
-\contentsline {subsection}{\numberline {5.1}Distributed Training}{12}{}%
-\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{13}{}%
-\contentsline {subsection}{\numberline {5.2}Proof Of Stake}{13}{}%
-\contentsline {section}{\numberline {6}Closing Statements}{13}{}%
+\contentsline {subsubsection}{\numberline {2.6.2}Model Parallelism}{12}{}%
+\contentsline {subsubsection}{\numberline {2.6.3}Training}{12}{}%
+\contentsline {section}{\numberline {3}Key Benefits}{12}{}%
+\contentsline {subsection}{\numberline {3.1}Censorship-Proof}{12}{}%
+\contentsline {subsection}{\numberline {3.2}Concurrent Inference}{13}{}%
+\contentsline {section}{\numberline {4}Challenges and Limitations}{13}{}%
+\contentsline {subsection}{\numberline {4.1}Privacy}{13}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{13}{}%
+\contentsline {subsection}{\numberline {4.2}Inefficient Delegation}{14}{}%
+\contentsline {section}{\numberline {5}Future Aspirations}{14}{}%
+\contentsline {subsection}{\numberline {5.1}Distributed Training}{14}{}%
+\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{14}{}%
+\contentsline {subsection}{\numberline {5.2}Proof Of Stake}{15}{}%
+\contentsline {subsection}{\numberline {5.3}Level 2 Payments}{15}{}%
+\contentsline {section}{\numberline {6}Immediate Feasibility of Centralized Implementations}{15}{}%
+\contentsline {section}{\numberline {7}Closing Statements}{16}{}%

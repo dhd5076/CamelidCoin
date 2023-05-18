@@ -46,7 +46,9 @@ Our protocol works off of the original peer-to-peer electronic cash system propo
 We will also discuss current challenges and limitations with our current protocol.
 \end{abstract}
 
+\newpage
 \tableofcontents
+\newpage
 
 \section{Introduction}
 CamelidCoin is a novel blockchain protocol that provides a trustless and incentive-based system for distributed auto-regressive large language model (LLM) computation and training. 
@@ -409,7 +411,36 @@ This is a challenging task for an emerging coin, as without a large market cap, 
 However, once the coin has stabilized and has a sufficient market cap, we plan to follow in the footsteps of Ethereum and make the switch. 
 By doing so, we will be able to eliminate the wasteful compute associated with traditional Proof-Of-Work and move towards a more sustainable and eco-friendly system.
 
-While using job completion as proof of work has some potential advantages, it is unlikely to completely replace the proof-of-work algorithm. Nevertheless, it is an interesting area of research that could lead to innovative solutions for blockchain scalability and security.
+While using job completion as proof of work has some potential advantages, it is unlikely to completely replace the proof-of-work algorithm. 
+Nevertheless, it is an interesting area of research that could lead to innovative solutions for blockchain scalability and security.
+
+\subsection{Level 2 Payments}
+In the future, as the number of transactions continues to increase, the blockchain may face challenges in handling high traffic, low quantity payments efficiently. 
+To address this issue, the development of a Level 2 network becomes necessary, which would be built on top of the existing blockchain infrastructure. 
+The purpose of this network would be to enable rapid and micro payments.
+
+Layer 2 networks operate by handling thousands of transactions off-chain, utilizing payment channels. 
+These channels allow parties to conduct multiple transactions without each individual transaction being recorded on the main blockchain. 
+Instead, only the final settlement is recorded, reducing the overall transaction load on the main chain.
+
+To achieve this, Layer 2 networks employ a series of condensing algorithms. 
+These algorithms summarize and aggregate the sum of multiple payments made within the payment channels. 
+By condensing the information in this way, the need for a record of every single transaction is eliminated, resulting in improved scalability and efficiency.
+
+The introduction of Level 2 payments brings the potential for faster and more scalable transaction processing, making it feasible to handle a large volume of low-value transactions in a more space and cost efficient manner.
+
+\section{Immediate Feasibility of Centralized Implementations}
+The implementation of a centralized version of the described network is not only feasible but also highly achievable at present. 
+By adopting a centralized approach, the need for a blockchain infrastructure is eliminated, resulting in a significant reduction in complexity.
+
+In this centralized version, the network would rely on a trusted moderator, typically in the form of a company or website, responsible for handling payments and enforcing rules. 
+While the network still plays a role in verification, the central authority assumes the tasks of processing payments and administering appropriate penalties. 
+To ensure transparency and maintain openness, the actions of the central authority can be justified and made accessible to network participants.
+
+Adopting a centralized model addresses several challenges associated with consensus and blockchain implementation. It simplifies the task at hand and eliminates inefficiencies related to duplicate task completion. 
+Additionally, the central authority can serve as a task scheduler, strategically assigning tasks to a select subset of nodes while keeping other nodes free. 
+This approach ensures optimal task allocation, prioritizing faster nodes and balancing workload distribution effectively.
+
 
 \section {Closing Statements}
 Auto-regressive models such as LLMs will define the next decade. Our primary goal is to further democratize large language models.
