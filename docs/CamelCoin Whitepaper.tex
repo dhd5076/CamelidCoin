@@ -20,7 +20,7 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{.5cm}
-    {\small Revision 1.0.3 \\}
+    {\small Revision 1.0.7 \\}
     \vspace{1cm}
     {\fontsize{40}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
@@ -54,7 +54,10 @@ In this system, lightweight clients can submit input for completion by a large p
 However, to ensure the validity of the output from these compute nodes, a new algorithm called Random Autoregressive Subsampling for Token Integrity Checking (RASTiC) has been proposed in this paper. 
 RASTiC algorithm can be completed either by the client or other compute nodes, and it quickly verifies the output's authenticity with near certainty.
 
-In this paper, we will detail the structure and specifics of the CamelidCoin protocol, which is built on a peer-to-peer network. The protocol modifies the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin to fit the use case of LLM computation and training. We will also discuss the current challenges and limitations of our protocol.
+In this paper, we will detail the structure and specifics of the CamelidCoin protocol, which is built on a peer-to-peer network. 
+The protocol modifies the original peer-to-peer electronic cash system proposed by Satoshi Nakamoto's Bitcoin to fit the use case of LLM computation and training. 
+We will also discuss the current challenges and limitations of our protocol.
+
 \subsection{Related Work}
 The concept of distributed computation is not new, and several existing projects utilize it for various purposes.
 
@@ -308,10 +311,55 @@ There are a couple of exploits that we can foresee being used to bypass the algo
 \end{enumerate}
 
 \subsection{Model}
+The network will support a diverse range of models, where the term 'Model' encompasses any GPT-like autoregressive model that adheres to the principles of sequential generation. 
+A certain level of popularity will be necessary for a model to be considered both usable and secure within the network. 
+While participants in the network will have the freedom to host any compatible model of their choice, it is expected that a few highly popular models will dominate the network due to the dynamics of supply and demand. 
+The best-performing models, as determined by user demand and overall performance, are likely to attract more usage and attention, solidifying their prominence within the network. 
+It is important to note that all models hosted in the network must adhere to the auto-regressive architecture, ensuring that the model's output is generated sequentially based on previously generated tokens. 
+The auto-regressive constraint is essential to ensure compatibility with the network's integrity checking algorithm, enabling effective collaboration and optimal utilization of the distributed model infrastructure. 
+This requirement guarantees that the model's sequential generation process aligns with the integrity checks performed by the network, ensuring consistent and reliable results across distributed nodes.
+
 \subsubsection{Distribution}
+In the distributed architecture, each model, along with its subsequent versions and generations, is identified by its Merkle root. 
+This unique identifier ensures integrity and consistency of the model throughout the network.
+
+To store the model, it is divided into small chunks, each having a unique hash. 
+These chunks form the building blocks of the model representation. 
+The Merkle root is computed by aggregating the hashes of these chunks, providing a concise representation of the entire model.
+
+When a new node joins the network, it can retrieve the model by querying neighboring nodes for the required chunks. 
+By requesting chunks in parallel from multiple nodes, the new node can efficiently obtain the complete model.
+
+The Merkle root plays a crucial role in ensuring the authenticity of the model. 
+When receiving chunks from neighboring nodes, the new node can verify the integrity of the model by comparing the computed Merkle root with the confirmed Merkle root received from trusted sources. 
+This verification process detects any tampering or modification of the model during distribution.
+
+In addition to verifying integrity, the Merkle root is also used to identify and handle invalid chunks. 
+By comparing the Merkle root of a received model with the expected Merkle root, the new node can identify any discrepancies and request the necessary chunks again to ensure the model's completeness and correctness.
+
+By leveraging the Merkle root and the distributed storage of model chunks, the network achieves a robust and secure model distribution mechanism.
+
+\subsubsection{Model Parallelism}
+\subsubsection{Training}
 
 \section{Key Benefits}
 \subsection{Censorship-Proof}
+The distributed and open nature of models addresses a challenging issue associated with hosting language models, namely censorship. 
+When a single entity hosts a model, they assume the role of the sole arbiter in determining what content is deemed harmful or dangerous. 
+Realistically, such entities cannot afford to allow unfiltered text generation, as they bear the responsibility of being publicly accountable. 
+However, censorship is a complex task, often resulting in overzealous efforts, as evident in privately held models today. 
+These well-intentioned censorship initiatives not only give rise to intricate challenges concerning openness and freedom but also tend to severely restrict current models, rendering them increasingly limited in their usefulness beyond basic tasks.
+
+A distributed and open model offers a democratic approach in determining the capabilities of the model and distributes responsibility in a unique way. 
+In such a system, the network serves as a means of facilitating interactions, while individual clients bear the responsibility for their own generations. 
+This decentralized structure allows for a collective decision-making process, enabling users to have a say in the model's functionalities and outputs. 
+By distributing the blame and accountability across multiple nodes, the network fosters a sense of shared responsibility, minimizing the concentration of power and promoting a more inclusive and democratic environment.
+
+\subsection{Concurrent Inference}
+A significant advantage of utilizing a large network of compute nodes is the ability to achieve concurrent inference, enabling multiple inferences to be performed simultaneously. 
+Presently, many models are either not designed or are too large to support the computation of multiple inferences on a single client. 
+For instance, consider a scenario where an initial query seeks information about the layout of a task, and subsequent inferences aim to provide detailed steps for executing that task. 
+With a distributed computing infrastructure, it becomes feasible to handle these subsequent inferences concurrently, greatly enhancing efficiency and responsiveness.
 
 \section{Challenges and Limitations}
 \subsection{Privacy}

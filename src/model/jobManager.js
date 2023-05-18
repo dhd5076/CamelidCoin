@@ -75,8 +75,7 @@ export class JobManager {
                   id: message.job.hash
                 }
               })
-              this.sendMessage(message);
-              resolve();
+              resolve(message);
             });
           } else {
             reject(new Error('Could not pickup job: Invalid Job'));
