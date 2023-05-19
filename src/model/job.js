@@ -21,7 +21,7 @@ export class Job {
      * @param {Number} seed seed to use to generate output
      * @param {Number} tokens number of tokens to be generated
      * @param {JOBSTATE} state current state of the job
-     * @param {output} output output of job if completed otherwise null
+     * @param {String} output output of job if completed otherwise null
      */
     constructor(input, seed, tokens, state, timestamp, output) {
         this.input = input,
@@ -30,9 +30,7 @@ export class Job {
         this.state = state,
         this.output = output,
         this.timestamp = timestamp,
-        this.getHash().then((hash) => {
-            this.hash = hash;
-        })
+        this.calculateHash(hash => this.hash = hash);
     }
 
     /**
@@ -68,14 +66,10 @@ export class Job {
      * @returns {Promise.<String>} the hash of the job
      */
     calculateHash() {
-        const data = {
-            input,
-            seed,
-            tokens,
-            
-        }
-        return new Promise((resolve, reject) => {
-            
+        return new Promise((resolve, reject) => {  
+            cryptoUtils.hash(JSON.stringify(this))
+            .then(hash => resolve(hash))
+            .catch(error => reject(error));
         })
     }
 }
