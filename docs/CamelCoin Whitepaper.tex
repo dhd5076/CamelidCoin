@@ -125,7 +125,7 @@ The process for creating a new keypair is as follows:
 \item Generate a new private key $k$, which is a random 256-bit integer.
 \item Calculate the corresponding public key $K$ by multiplying the curve's generator point $G$ by the private key: $K = k \times G$.
 \end{enumerate}
-\subsubsection{Public Address}
+\subsubsection{Public Address Generation}
 
 Let $PK$ be the public key to convert to a CamelidCoin address.\\
 Let $h_1 = \text{SHA-256}(PK)$ be the SHA-256 hash of the public key.\\
@@ -136,7 +136,6 @@ Let $h_4 = \text{SHA-256}(h_3)$ be the SHA-256 hash of the previous result.\\
 Let $chksum = \text{first 4 bytes of } h_4$ be the first 4 bytes of the second SHA-256 hash.\\
 Let $addr = \text{Base58Check}(buf || h_2 || chksum)$ be the concatenated result encoded in Base58Check encoding.\\
 
-Note: This formula assumes that $PK$ is a valid public key and that all hash functions return values in their hexadecimal representation. It also assumes that the concatenation operator is denoted by "$||$".
 \subsection{Transaction}
 
 A CamelCoin transaction is a data structure consisting of several fields:

@@ -6,7 +6,7 @@
 \contentsline {subsubsection}{\numberline {2.1.2}Messaging Protocol}{4}{}%
 \contentsline {subsection}{\numberline {2.2}Wallet}{4}{}%
 \contentsline {subsubsection}{\numberline {2.2.1}Keypair Creation}{5}{}%
-\contentsline {subsubsection}{\numberline {2.2.2}Public Address}{5}{}%
+\contentsline {subsubsection}{\numberline {2.2.2}Public Address Generation}{5}{}%
 \contentsline {subsection}{\numberline {2.3}Transaction}{5}{}%
 \contentsline {subsubsection}{\numberline {2.3.1}Proof of Work}{6}{}%
 \contentsline {subsection}{\numberline {2.4}Jobs}{7}{}%
