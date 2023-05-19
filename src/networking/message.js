@@ -29,13 +29,6 @@ export class Message {
     }
 
     /**
-     * @returns {Promise.<Boolean} whether or not the message should be forwarded 
-     */
-    shouldForward() {
-        return forwardableMessages.includes(this.type);
-    }
-
-    /**
      * Serialize the message into a buffer
      * @returns {Promise.<Buffer>} A buffer of the serialized message object
      */
