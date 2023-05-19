@@ -5,6 +5,8 @@
 import { LLM } from "llama-node";
 import { LLamaRS } from "llama-node/dist/llm/llama-rs.js";
 import path from "path";
+import { Job } from "./job";
+import { getRandomInt } from "../utils/random";
 
 /**
  * @class Model
@@ -30,6 +32,42 @@ export class Model {
             await this.model.load(this.config);
             resolve()
         })
+    }
+
+    /**
+     * Validate an output using the RASTiC method
+     * See RASTIC Method in whitepaper for more information
+     * @param {Job} job Job to validate
+     */
+    verifyCompletedJob(job) {
+        return new Promise((resolve, reject) => {
+            const promises = [
+                //Note: we need to add 1 to the index we need since indexes start at 0
+                this.validateSingleToken(job.input, job.output, job.seed, job.tokens, job.input.length + 2),
+                //TODO may need to be revised for short inputs/outputs, e.g. < 3/4 tokens
+                this.validateSingleToken(job.input, job.output, job.seed, job.tokens, getRandomInt(input.length + 3, input.length + output.length - 2)), 
+                this.validateSingleToken(job.input, job.output, job.seed, job.tokens, job.input.length + job.output.length)
+            ]
+
+            Promise.all(promises).then(([continuity, integrity, truncation]) => {
+                if(continuity && integrity && truncation) {
+                    resolve(true);
+                } else {
+                    reject(false);
+                }
+            }).catch((error) => {
+                reject(error);
+            })
+        });
+    }
+
+    /**
+     * Validates a single token matches the input
+     * @param {*} input 
+     * @param {*} seed 
+     * @param {*} tokens 
+     */
+    validateSingleToken(input, seed, tokens) {
     }
 
     /**

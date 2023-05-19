@@ -19,6 +19,12 @@
 *.aux
 *.log
 *.pdf
+*.toc
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
 
 
 # production
