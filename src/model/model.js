@@ -4,7 +4,7 @@
 
 import { LLM } from "llama-node";
 import { LLamaRS } from "llama-node/dist/llm/llama-rs.js";
-import path from "path";
+import path, { resolve } from "path";
 import { Job } from "./job";
 import { getRandomInt } from "../utils/random";
 
@@ -43,10 +43,10 @@ export class Model {
         return new Promise((resolve, reject) => {
             const promises = [
                 //Note: we need to add 1 to the index we need since indexes start at 0
-                this.validateSingleToken(job.input, job.output, job.seed, job.tokens, job.input.length + 2),
+                this.validateSingleToken(job.input, job.output, job.seed, job.input.length + 2),
                 //TODO may need to be revised for short inputs/outputs, e.g. < 3/4 tokens
-                this.validateSingleToken(job.input, job.output, job.seed, job.tokens, getRandomInt(input.length + 3, input.length + output.length - 2)), 
-                this.validateSingleToken(job.input, job.output, job.seed, job.tokens, job.input.length + job.output.length)
+                this.validateSingleToken(job.input, job.output, job.seed, getRandomInt(input.length + 3, input.length + output.length - 2)), 
+                this.validateSingleToken(job.input, job.output, job.seed, job.input.length + job.output.length)
             ]
 
             Promise.all(promises).then(([continuity, integrity, truncation]) => {
@@ -62,12 +62,26 @@ export class Model {
     }
 
     /**
-     * Validates a single token matches the input
-     * @param {*} input 
-     * @param {*} seed 
-     * @param {*} tokens 
+     * Validates a single token
+     * @param {*} input input token sequence
+     * @param {*} output output token sequence
+     * @param {*} seed the generation seed 
+     * @param {*} index the sequence index to validate
      */
-    validateSingleToken(input, seed, tokens) {
+    validateSingleToken(input, output, seed, index) {
+        //TODO: Check if index calculation is correct, or if it needs to be offset by 1
+        const concatSequence = input.concat(output);
+        this.generateCompletition(concatSequence.slice(0, index), seed, 1)
+        .then((completition) => {
+            if(completition[index] == concatSequence[index]) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        })
+        .catch((error) => {
+            reject(error);
+        })
     }
 
     /**

@@ -51,12 +51,13 @@ export class Job {
 
     /**
      * Checks whether or no the job is valid
+     * Only verifies that the structure is correct, does not validate output
      * @param {Job} job
      * @returns {Promise.<Boolean, Error>}
      */
     static validate(job) {
       return new Promise((resolve, reject) => {
-        //TODO implement validation
+        //TODO: Validate job
         resolve(true);
       })
     }
