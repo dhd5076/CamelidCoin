@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dhd5076/DMLCT.git"
+    "url": "git+https://github.com/dhd5076/CamelidCoin.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dhd5076/DMLCT/issues"
   },
-  "homepage": "https://github.com/dhd5076/DMLCT#readme",
+  "homepage": "https://www.camelidcoin.org/",
   "dependencies": {
     "@llama-node/core": "^0.0.33",
     "@llama-node/llama-cpp": "^0.0.33",
