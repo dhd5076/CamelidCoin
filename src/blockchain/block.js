@@ -18,21 +18,24 @@ class Block {
     }
 
     /**
-     * 
+     * Get's the merkle proof for a given transaction
+     * @param {String} id the id of the transaction
      */
-    getMerkleProof() {
+    getMerkleProof(id) {
 
     }
 
     /**
-     * 
+     * Calcaulte the merkle root of the block
+     * @returns {Promise.<String>} the merkle root of the block
      */
-    getMerkleRoot() {
-
+    calculateMerkleRoot() {
+        return new Promise((resolve, reject) => {
+        });
     }
 
     /**
-     * 
+     * TODO:  Figure out why I added this function and if I can remove it
      */
     createInput() {
         return new Promise((resolve, reject) => {
@@ -41,7 +44,7 @@ class Block {
     }
 
     /**
-     * 
+     * Validates whether or not the block is valid
      */
     validate() {
         return new Promise((resolve, reject) => {

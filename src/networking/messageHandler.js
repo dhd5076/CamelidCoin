@@ -17,19 +17,21 @@ export class MessageHandler {
      */
     registerHandler(type, handler) {
         return new Promise((resolve, reject) => {
-            this.handles.set(type, handler);
-            resolve();
+            try {
+                this.handles.set(type, handler);
+                resolve();
+            } catch(error) {
+                reject(error);
+            }
         })
     }
 
     /**
      * Handle an incoming message
      * @param {Message} message - the incoming message
-     * @param {function} reply - send message back to sender
-     * @returns {Promise.<null>} A Promise that resolves when the message has been handled successfully
-     * and rejects if there's an error
+     * @returns {Promise.Message} A message to send back to the sender, optional
      */
-    handleMessage(message, reply) {
+    handleMessage(message) {
         return new Promise((resolve, reject) => {
             if (!message || !message.type) {
                 reject(new Error('Invalid message object'));
@@ -39,11 +41,8 @@ export class MessageHandler {
             if (!handler) {
                 reject(new Error(`No handler registered for message type ${message.type}`));
             } else {
-                handler(message, reply);
-                if(this.shouldForward(message)) {
-                    this.sendMessage(message, this.sendMessage);
-                }
-                resolve();
+                handler(message)
+                .then(message => resolve(message))
             }
         });
     }

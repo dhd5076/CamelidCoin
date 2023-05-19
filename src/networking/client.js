@@ -32,7 +32,7 @@ class Client {
     /**
      * Handles LIST_PEERS command
      */
-    handleGetPeersMessage(message, reply) {
+    handleGetPeersMessage(message) {
         reply(new Message('LIST_PEERS', this.peers));
     }
 
