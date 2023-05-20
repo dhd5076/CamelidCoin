@@ -99,10 +99,26 @@ export class Transcation {
     }
 }
 
+/**
+ * @class Input
+ * @classdesc Represents an input to a transcation
+ */
 export class Input {
-
+    constructor(transactionHash, outputIndex, signature) { 
+        this.transactionHash = transactionHash;
+        this.outputIndex = outputIndex;
+        this.signature = signature;
+    }
 }
 
+/**
+ * @class Output
+ * @classdesc Represents an output to a transcation
+ */
 export class Output {
-
+    constructor(transactionHash, outputIndex, signature) {
+        this.transactionHash = transactionHash;
+        this.outputIndex = outputIndex;
+        this.signature = signature;
+    }
 }
