@@ -6,7 +6,12 @@ import { Block } from './block';
 import { Transcation } from './transaction';
 
 export class Chain {
-  constructor() {
+  /**
+   * @constructor
+   * @param {String} dbLocation
+   */
+  constructor(dbLocation) {
+    this.dbLocation = dbLocation;
   }
 
   /**
@@ -14,7 +19,7 @@ export class Chain {
    */
   init() {
     return new Promise((resolve, reject) => {
-      this.db = level('./chain.db', { valueEncoding: 'json' })
+      this.db = level(this.dbLocation, { valueEncoding: 'json' })
       .then(() => {
         this.blocks = db.sublevel('blocks');
         this.transactions = db.sublevel('transactions');
@@ -43,24 +48,20 @@ export class Chain {
   }
 
   /**
-   * @method addBlock
-   * @description Add a block to the chain
+   * @method setBlock
+   * @description set or update a block in the chain
    * @param {} block 
    * @returns {Promise.<null, Error>}
    */
-  addBlock(block) {
+  setBlock(block) {
     return new Promise((resolve, reject) => {
-    });
-  }
-
-  /**
-   * @method addTransaction
-   * @description Add a transaction to the chain
-   * @param {Transcation} transaction 
-   * @returns {Promise.<null, Error>}
-   */
-  addTransaction(transaction) {
-    return new Promise((resolve, reject) => {
+      this.db.put(`blocks:${block.hash}`, block)
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(new Error('Failed to add block: ' + error.message));
+      });
     });
   }
 
@@ -72,6 +73,29 @@ export class Chain {
    */
   getBlock(hash) {
     return new Promise((resolve, reject) => {
+      this.db.get(`blocks:${hash}`)
+      .then((block) => {
+        resolve(block);
+      })
+      .catch((error) => {
+        reject(new Error('Failed to get block: ' + error.message));
+      });
+    });
+  }
+
+  /**
+   * @method setTransaction
+   * @description Set or update a transaction to the chain
+   * @param {Transcation} transaction 
+   * @returns {Promise.<null, Error>}
+   */
+  setTransaction(transaction) {
+    return new Promise((resolve, reject) => {
+      this.db.put(`transactions:${transaction.hash}`, transaction)
+      .then(resolve)
+      .catch((error) => {
+        reject(new Error('Failed to add transaction: ' + error.message));
+      });
     });
   }
 
@@ -83,17 +107,47 @@ export class Chain {
    */
   getTransaction(hash) {
     return new Promise((resolve, reject) => {
+      this.db.get(`transactions:${hash}`)
+      .then((transaction) => {
+        resolve(transaction);
+      })
+      .catch((error) => {
+        reject(new Error('Failed to get transaction: ' + error.message));
+      });
+    });
+  }
+
+  /**
+   * @method setWallet
+   * @description Add or update an wallet in the chain
+   * @param {Wallet} wallet
+   * @returns {Promise.<null, Error>}
+   */
+  setWallet(wallet) {
+    return new Promise((resolve, reject) => {
+      this.db.put(`wallets:${wallet.address}`, wallet)
+      .then(resolve)
+      .catch((error) => {
+        reject(new Error('Failed to add wallet: ' + error.message));
+      });
     });
   }
 
   /**
    * @method getWallet
-   * @description Get info about a wallet
+   * @description Get a wallet form the chain
    * @param {String} address address of the wallet
    * @returns {Promise.<Wallet, Error>}
    */
   getWallet(address) {
     return new Promise((resolve, reject) => {
+      this.db.get(`wallets:${address}`)
+      .then((wallet) => {
+        resolve(wallet);
+      })
+      .catch((error) => {
+        reject(new Error('Failed to get wallet: ' + error.message));
+      });
     });
   }
 }
