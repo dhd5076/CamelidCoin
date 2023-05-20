@@ -6,54 +6,18 @@ import { KeyPair } from '../utils/cryptoUtils';
 
 /**
  * @class Transcation
+ * @classdesc Represents a transcation in the blockchain
  */
 export class Transcation {
-    constructor(inputs, outputs, timestamp) {
-        this.inputs = inputs;
-        this.outputs = outputs;
-        this.type = 
+    constructor(inputs, outputs) {
+        this.type = type;
+        this.fromAddress = fromAddress;
+        this.toAddress = toAddress;
+        this.amount = amount;
+        this.fee = fee;
         this.timestamp = timestamp;
         this.hash = this.calculateHash();
-        this.signature = null;
-    }
-
-    /**
-     * Enum representing the different types of transactions
-     * @readonly 
-     * @enum {Number}
-     */
-    static get Type() {
-        return { 
-            /**
-             * Transaction type: wallet to wallet transfer.
-             * Cannot be invalidated if valid while in pool
-             */
-            WALLET_TO_WALLET: 1,
-            /**
-             * Transaction type: payment by client to compute node
-             * Can be invalidated by INVALID_OUTPUT or NO_OUTPUT
-             */
-            PAYMENT_FOR_JOB: 2,
-            /**
-             * Transaction: 
-             */
-            JOB_VOUCH: 3
-        }
-    }
-
-    /**
-     * Create a new WALLET_TO_WALLET transaction
-     * @param {Wallet} wallet wallet object to use to send from and sign the transaction
-     * @param {String} output wallet address of the destination of the transaction
-     */
-    static create_W2W_Transaction(wallet, ) {
-        return new Promise((resolve, reject) => {
-            return new Transcation(
-                [],
-                [],
-                Date.now()
-            )
-        })
+        this.validationScript = validationScript;
     }
 
     /**
@@ -78,47 +42,69 @@ export class Transcation {
      */
     sign(keyPair) {
         return new Promise((resolve, reject) => {
-            const data = JSON.stringify(this);
-            const signature = keyPair.sign(data);
-            this.signature = signature;
-            resolve();
+            keyPair.sign(this.hash)
+            .then((signature) => {
+                this.signature = signature;
+                resolve();
+            });
         })
-    }   
+    }
 
-    verify(publicKey) {
+    /**
+     * Determines if the transcation is valid
+     * @returns {Promise.<Boolean>} whether or not the transcation is valid
+     */
+    validate() {
         return new Promise((resolve, reject) => {
-            const data = JSON.stringify(this);
-            KeyPair.verifySignature(publicKey, data)
-            .then((isVerified) => {
-                resolve(isVerified);
-            })
-            .catch((error) => {
-                reject(error);
-            })
+            resolve(new Error('Not implemented'));
         })
     }
 }
 
 /**
- * @class Input
- * @classdesc Represents an input to a transcation
+ * @class ValidationScript
+ * @classdesc Represents a validation script for a transcation
  */
-export class Input {
-    constructor(transactionHash, outputIndex, signature) { 
-        this.transactionHash = transactionHash;
-        this.outputIndex = outputIndex;
-        this.signature = signature;
+class ValidationScript {
+    constructor() {
+
     }
 }
 
 /**
- * @class Output
- * @classdesc Represents an output to a transcation
+ * @class JobValidationScript
+ * @classdesc transaction that depends on job completion for verification
  */
-export class Output {
-    constructor(transactionHash, outputIndex, signature) {
-        this.transactionHash = transactionHash;
-        this.outputIndex = outputIndex;
-        this.signature = signature;
+export class JobValidationScript extends ValidationScript {
+    constructor() {
+    }
+
+    /**
+     * @method isValid
+     * @description Validates whether or not the script is valid
+     * @returns {Promise.<Boolean>} whether or not the script is valid
+     */
+    isValid() {
+        return new Promise((resolve, reject) => {
+        });
+    }
+}
+
+/**
+ * @class PubKeyValidationScript
+ * @classdesc transaction that depends on a public key for verification
+ */
+export class PubKeyValidationScript extends ValidationScript {
+    constructor() {
+    }
+
+    /**
+     * @method isValid
+     * @description Validates whether or not the script is valid
+     * @returns {Promise.<Boolean>} whether or not the script is valid
+     */
+    isValid() {
+        return new Promise((resolve, reject) => {
+        });
     }
 }

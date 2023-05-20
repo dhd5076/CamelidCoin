@@ -1,93 +1,58 @@
 /**
- * @module Chain used for handling blockchain
+ * @module Chain used for managing the blockchain
  */
 import level from 'level';
 import { Block } from './block';
 
 class Chain {
-  constructor(dbPath) {
-    this.db = level(dbPath);
+  constructor() {
   }
 
   /**
-   * Add block to the blockchain
-   * @param {Block} block The block to be added
+   * Initialize the chain, loads data from db file or creates one if it doesn't exist
    */
-  addBlock(block) {}
+  init() {
+    return new Promise((resolve, reject) => {
+
+      this.db = level('./chain.db', { valueEncoding: 'json' })
+      .then(() => {
+        this.blocks = db.sublevel('blocks');
+        this.transactions = db.sublevel('transactions');
+        this.utxos = db.sublevel('utxos');
+        this.addresses = db.sublevel('addresses');
+        resolve();
+      })
+      .catch((error) => {
+        reject(new Error('Failed to initialize chain: ' + error.message))
+      });
+    });
+  }
 
   /**
-   * Get the height of the blockchain
-   * @returns {Promise.<number>} The height of the blockchain
+   * Create and add genesis block to the chain
    */
-  getHeight() {}
+  createGenesisBlock() {
+    return new Promise((resolve, reject) => {
+      const genesis = new Block(0, '0', Date.now(), [], 0);
+      this.blocks.put(genesis.hash, genesis)
+    });
+  }
 
-  /**
-   * Get the block at the given height
-   * @param {number} height The height of the block
-   * @returns {Promise.<Block>} The block at the given height
-   */
-  getBlock(height) {}
+  addBlock(block) {
+  }
 
-  /**
-   * Get the block with the given hash
-   * @param {string} hash The hash of the block
-   * @returns {Promise.<Block>} The block with the given hash
-   */
-  getBlockByHash(hash) {}
+  addTransaction(transaction) {
+  }
 
-  /**
-   * Get all blocks with the given address in their transactions
-   * @param {string} address The address to search for
-   * @returns {Promise.<Array.<Block>>} An array of blocks with the given address in their transactions
-   */
-  getBlocksByAddress(address) {}
+  getBlock(hash) {
+  }
 
-  /**
-   * Get the current block difficulty
-   * @returns {Promise.<number>} The current block difficulty
-   */
-  getDifficulty() {}
+  getTransaction(hash) {
+  }
 
-  /**
-   * Get the blockchain as an array of blocks
-   * @returns {Promise.<Array.<Block>>} An array of blocks in the blockchain
-   */
-  getChain() {}
+  getUTXO(address) {
+  }
 
-  /**
-   * Validate the blockchain
-   * @returns {Promise.<boolean>} Whether or not the blockchain is valid
-   */
-  validateChain() {}
-
-  /**
-   * Get the balance for the given address
-   * @param {string} address The address to get the balance for
-   * @returns {Promise.<number>} The balance for the given address
-   */
-  getBalance(address) {}
-
-  /**
-   * Add transaction to the transaction pool
-   * @param {Transaction} transaction The transaction to be added to the pool
-   */
-  addTransactionToPool(transaction) {}
-
-  /**
-   * Process pending transactions and mine a new block
-   * @param {string} minerAddress The address of the miner
-   * @returns {Promise.<Block>} The newly mined block
-   */
-  mineBlock(minerAddress) {}
-
-  /**
-   * Get the transaction pool
-   * @returns {Promise.<Array.<Transaction>>} The transaction pool
-   */
-  getTransactionPool() {}
-
-  /**
-   * Clear the transaction pool
-   */
-  clearTransactionPool() {}
+  getAddress(address) {
+  }
 }
