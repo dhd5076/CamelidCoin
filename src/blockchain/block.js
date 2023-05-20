@@ -52,19 +52,6 @@ class Block {
         })
     }
 
-
-    /**
-     * 
-     */
-    getGenesis() {
-        return new Promise((resolve, reject) => {
-            const genesis  = new Block(
-                //Genesis data
-            );
-            genesis.hash = this.calculateHash(block)
-        })
-    }
-
     /**
      * Calculate the hash of the block
      * @returns {Promise.<String} the hash of the block
