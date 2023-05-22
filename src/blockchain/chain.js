@@ -1,5 +1,6 @@
 /**
  * @module Chain used for managing the blockchain
+ * @author Dylan Dunn
  */
 import level from 'level';
 import { Block } from './block';

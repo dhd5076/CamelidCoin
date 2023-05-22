@@ -7,46 +7,38 @@ const { KeyPair } = require('../utils/cryptoUtils')
 
 /**
  * @class Wallet
+ * @classdesc Represents a wallet in the blockchain
  */
 class Wallet {
     /**
-     * Used for creating new wallet objects from a keypair
+     * @constructor
+     * @description Creates a new wallet object
      * @param {KeyPair} keyPair Keypair to use to generate the wallet
      */
     constructor(keyPair) {
-        console.log("New Wallet Created");
         this.keyPair = keyPair;
     }
 
     /**
-     * Initializes the wallet using keypair
+     * @method init
+     * @description Initializes the wallet using keypair
+     * @returns {Promise.<null, Error>}
      */
     init() {
         return new Promise((resolve, reject) => {
-            console.log("Initializing Wallet...")
+            logger.debug("Initializing Wallet...")
             this.keyPair.generateAddress()
             .then((address) => {
                 this.address = address;
-                console.log("Address generated: " + address)
-                console.log("Generating Nonce...")
+                logger.debug("Address generated: " + address)
+                logger.debug("Generating Nonce...")
             })
             .then(() => this.keyPair.generateNonce())
             .then(() => {
-                console.log("Nonce Generated: " + this.keyPair.nonce)
+                logger.debug("Nonce Generated: " + this.keyPair.nonce)
                 resolve()
             })
         })
     }
-
-    /**
-     * Get keypair
-     * @returns {Promise.<KeyPair>} keypair of this wallet
-     */
-    getKeyPair() {
-        return new Promise((resolve, reject) => {
-            resolve(this.keyPair)
-        })
-    }
  }
-
 exports = Wallet;

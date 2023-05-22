@@ -1,5 +1,6 @@
 /**
  * @module Transcation used for creating and verifying transcations
+ * @author Dylan Dunn
  */
 
 import { KeyPair } from '../utils/cryptoUtils';
@@ -65,18 +66,20 @@ export class Transcation {
 
     /**
      * Determines if the transcation is valid
+     * @method isValid
+     * @description Determines if the transcation is valid
      * @returns {Promise.<Boolean>} whether or not the transcation is valid
      */
     validate() {
         return new Promise((resolve, reject) => {
-            resolve(new Error('Not implemented'));
+            reject(new Error('Not implemented'));
         })
     }
 }
 
 /**
  * @class ValidationScript
- * @classdesc Represents a validation script for a transcation
+ * @classdesc Represents a validation script for a transcation, //NOTE: may be redundant
  */
 class ValidationScript {
     constructor() {
