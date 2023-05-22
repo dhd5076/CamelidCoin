@@ -3,7 +3,7 @@
  * @author Dylan Dunn
  */
 
-import { Transaction } from './transaction';
+import { Transaction } from './transaction.js';
 
 /**
  * @class Block

@@ -25,6 +25,7 @@
     "@llama-node/llama-cpp": "^0.0.33",
     "base58check": "^2.0.0",
     "bs58check": "^3.0.1",
+    "level": "^8.0.0",
     "llama-node": "^0.0.33",
     "winston": "^3.8.2"
   }

@@ -2,12 +2,15 @@ import net from 'net'
 //TODO update to use export default if no other classes to import from modules
 import { JobManager } from '../model/jobManager.js'
 import { Message } from './message.js';
+import { Model } from '../model/model.js';
+import { Peer } from './peer.js';
+import { Chain } from '../blockchain/chain.js';
 import { MessageHandler } from './messageHandler.js';
 import logger from '../utils/logger.js'
 
 /**
- * @class Node Client
- * The TCP client for connecting to nearby nodes
+ * @class Client
+ * @classdesc Represents a node client
  */
 class Client {
     /**
@@ -15,13 +18,16 @@ class Client {
      * @param {Number} port starting port
      * @param {Peer[]} seedPeers seed peers for creating initial connections
      * @param {Boolean} fullNode run as full node, otherwise runs as lightweight client
+     * @param {Model} modelFile LLM model to use for computation and/or verification
      */
-    constructor(port, seedPeers = [], fullNode) {
+    constructor(port, seedPeers = [], fullNode, modelFile) {
         logger.debug(`New tcp client created with ${seedPeers.length} peers.`)
         this.messageHandler = new MessageHandler(this.sendMessage);
         this.jobManager = new JobManager(this.messageHandler, fullNode)
-        this.messageHandler.registerHandler('');
+        this.messageHandler.registerHandler('')
+        this.model = new Model(modelFile);
         this.port = port
+        this.chain = new Chain
         if(seedPeers.length > 0) {
             this.peers = seedPeers;
         } else {
@@ -37,34 +43,41 @@ class Client {
     }
 
     /**
-     * Initialize Client
+     * @method init
+     * @description Initialize the client
+     * @returns {Promise.<null, Error>}
      */
     init() {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-            const server = await net.createServer((connection) => {
-                logger.debug(`New connection from ${connection.remoteAddress}:${connection.remotePort}`);
-                this.handleConnection(connection);
-            })
+            this.model.init().then(async () => {
 
-            server.listen(this.port, () => {
-                logger.debug(`Server listening on port ${this.port}`);
-            })
-
-            await this.peers.forEach(peer => {
-                const connection = net.createConnection({
-                    host: peer.address,
-                    port: peer.port
-                });
-                connection.on('connect', () => {
-                    this.handleConnection(connection)
+                const server = await net.createServer((connection) => {
+                    logger.debug(`New connection from ${connection.remoteAddress}:${connection.remotePort}`);
+                    this.handleConnection(connection);
                 })
-                connection.on('error', (error) => {
-                    logger.error(`Error connecting to peer ${peer.address}:${peer.port}: ${error.message}`)
+
+                server.listen(this.port, () => {
+                    logger.debug(`Server listening on port ${this.port}`);
                 })
-                peer.connection = connection;
-            })
-            resolve();
+
+                await this.peers.forEach(peer => {
+                    const connection = net.createConnection({
+                        host: peer.address,
+                        port: peer.port
+                    });
+                    connection.on('connect', () => {
+                        this.handleConnection(connection)
+                    })
+                    connection.on('error', (error) => {
+                        logger.error(`Error connecting to peer ${peer.address}:${peer.port}: ${error.message}`)
+                    })
+                    peer.connection = connection;
+                })
+                resolve();
+            }).catch((error) => {   
+                reject(new Error(`Error initializing client: ${error.message}`));
+            });
         })
     }
 

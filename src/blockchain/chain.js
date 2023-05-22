@@ -3,8 +3,8 @@
  * @author Dylan Dunn
  */
 import level from 'level';
-import { Block } from './block';
-import { Transcation } from './transaction';
+import { Block } from './block.js';
+import { Transcation } from './transaction.js';
 
 export class Chain {
   /**

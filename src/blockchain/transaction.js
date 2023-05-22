@@ -3,14 +3,24 @@
  * @author Dylan Dunn
  */
 
-import { KeyPair } from '../utils/cryptoUtils';
+import { KeyPair } from '../utils/cryptoUtils.js';
 
 /**
- * @class Transcation
- * @classdesc Represents a transcation in the blockchain
+ * @class Transaction
+ * @classdesc Represents a transaction in the blockchain
  */
-export class Transcation {
-    constructor(inputs, outputs) {
+export class Transaction {
+    /**
+     * @constructor
+     * @description Creates a transaction
+     * @param {String} fromAddress The address the transaction is from
+     * @param {String} toAddress The address the transaction is to
+     * @param {Number} amount The amount of the transaction
+     * @param {Number} fee The fee of the transaction
+     * @param {Date} timestamp The timestamp of the transaction
+     * @param {String} validationScript The validation script of the transaction
+     */
+    constructor(fromAddress, toAddress, amount, fee, timestamp, validationScript) {
         this.type = type;
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
@@ -22,10 +32,9 @@ export class Transcation {
     }
 
     /**
-     * Calculates the hash of the transcation
      * @method calculateHash
-     * @description Calculates the hash of the transcation
-     * @returns {Promise.<String>} the hash of the transcation
+     * @description Calculates the hash of the transaction
+     * @returns {Promise.<String>} the hash of the transaction
      */
     calcaluteHash() {
         return new Promise((resolve, reject) => {
@@ -48,9 +57,9 @@ export class Transcation {
     }
 
     /**
-     * Signs a transcation with a given keypair
+     * Signs a transaction with a given keypair
      * @method sign
-     * @description Signs a transcation with a given keypair
+     * @description Signs a transaction with a given keypair
      * @param {KeyPair} keyPair
      * @returns {Promise.<null>} 
      */
@@ -65,10 +74,10 @@ export class Transcation {
     }
 
     /**
-     * Determines if the transcation is valid
+     * Determines if the transaction is valid
      * @method isValid
-     * @description Determines if the transcation is valid
-     * @returns {Promise.<Boolean>} whether or not the transcation is valid
+     * @description Determines if the transaction is valid
+     * @returns {Promise.<Boolean>} whether or not the transaction is valid
      */
     validate() {
         return new Promise((resolve, reject) => {
@@ -79,7 +88,7 @@ export class Transcation {
 
 /**
  * @class ValidationScript
- * @classdesc Represents a validation script for a transcation, //NOTE: may be redundant
+ * @classdesc Represents a validation script for a transaction, //NOTE: may be redundant
  */
 class ValidationScript {
     constructor() {

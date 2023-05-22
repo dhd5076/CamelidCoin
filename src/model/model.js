@@ -1,18 +1,21 @@
 /**
- * @module Model
+ * @module Model used for managing the LLM model and generating completitions
+ * @author Dylan Dunn
  */
 
 import { LLM } from "llama-node";
 import { LLamaRS } from "llama-node/dist/llm/llama-rs.js";
 import path, { resolve } from "path";
-import { Job } from "./job";
-import { getRandomInt } from "../utils/random";
+import { Job } from "./job.js";
+import { getRandomInt } from "../utils/random.js";
 
 /**
  * @class Model
+ * @classdesc Represents an LLM model
  */
 export class Model {
     /**
+     * @constructor
      * @param {String} modelFile path to the model file 
      */
     constructor(modelFile) {
@@ -24,7 +27,8 @@ export class Model {
     }
 
     /**
-     * Load and initialized model
+     * @method init
+     * @description Initialize and load the model
      * @returns {Promise.<null, Error>}
      */
     init() {
@@ -35,8 +39,9 @@ export class Model {
     }
 
     /**
-     * Validate an output using the RASTiC method
-     * See RASTIC Method in whitepaper for more information
+     * @method verifyCompletedJob
+     * @description Validate a job using the RASTiC method
+     * @see RASTiC Method in whitepaper for more information
      * @param {Job} job Job to validate
      */
     verifyCompletedJob(job) {
@@ -62,11 +67,13 @@ export class Model {
     }
 
     /**
-     * Validates a single token
-     * @param {*} input input token sequence
-     * @param {*} output output token sequence
-     * @param {*} seed the generation seed 
-     * @param {*} index the sequence index to validate
+     * @method validateSingleToken
+     * @description Validate a single token in a sequence
+     * @todo Adjust token type later when determined
+     * @param {String[]} input input token sequence
+     * @param {String[]} output output token sequence
+     * @param {String} seed the generation seed 
+     * @param {Number} index the sequence index to validate
      */
     validateSingleToken(input, output, seed, index) {
         //TODO: Check if index calculation is correct, or if it needs to be offset by 1
@@ -85,7 +92,25 @@ export class Model {
     }
 
     /**
-     * Generates a completion based on parameters 
+     * @method tokenizeString
+     * @description Tokenize a string
+     * @param {String} input String to tokenize
+     * @returns {Promise.<String[], Error>}
+     */
+    tokenizeString(input) {
+        return new Promise((resolve, reject) => {
+            this.model.tokenize(string).then((tokens) => {
+                resolve(tokens)
+            }).catch((error) => {
+                reject(new Error("Failed to tokenize string: " + error));
+            });
+        });
+    }
+
+    /**
+     * @method generateCompletition
+     * @todo Adjust prompt type later when determined
+     * @description Generate a completition based on a prompt and parameters
      * @param {String} prompt Prompt to use to begin completion
      * @param {Number} seed Deterministic seeed to use
      * @param {Number} tokens Number of tokens to compute
