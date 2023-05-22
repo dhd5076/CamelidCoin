@@ -20,7 +20,7 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{.5cm}
-    {\small Revision 1.0.7 \\}
+    {\small Revision 1.0.9 \\}
     \vspace{1cm}
     {\fontsize{24.88}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
@@ -46,9 +46,7 @@ Our protocol works off of the original peer-to-peer electronic cash system propo
 We will also discuss current challenges and limitations with our current protocol.
 \end{abstract}
 
-\newpage
 \tableofcontents
-\newpage
 
 \section{Introduction}
 CamelidCoin is a novel blockchain protocol that provides a trustless and incentive-based system for distributed auto-regressive large language model (LLM) computation and training. 
@@ -340,9 +338,6 @@ By comparing the Merkle root of a received model with the expected Merkle root, 
 
 By leveraging the Merkle root and the distributed storage of model chunks, the network achieves a robust and secure model distribution mechanism.
 
-\subsubsection{Model Parallelism}
-\subsubsection{Training}
-
 \section{Key Benefits}
 \subsection{Censorship-Proof}
 The distributed and open nature of models addresses a challenging issue associated with hosting language models, namely censorship. 
@@ -383,7 +378,7 @@ This field of research holds promise for outsourcing auto-regressive models secu
 However, current developments in fully homomorphic encryption increase the time to compute by several orders of magnitude. 
 For instance, encryption operations that can take nanoseconds, such as addition in Paillier encryption, can take several seconds, minutes, or even hours at scale. 
 This is not feasible in a distributed neural network computation, where encryption, compute, and decryption must be done within a few seconds. 
-Organizations such as OpenMined are leading the effort to implement these principles, but it would require a significant amount of effort and modification to the current model
+Organizations such as OpenMined are leading the effort to implement these principles, but it would require a significant amount of effort and modification to the current model.
 \subsection{Inefficient Delegation}
 Another challenge with the current implementation is the redundant computation of data, which is a necessary precaution to protect against malicious nodes and account for the ad-hoc nature of the network. 
 While this ensures that the quickest free node can respond promptly, it does lead to inefficiencies in the delegation of tasks. 
@@ -428,6 +423,22 @@ By condensing the information in this way, the need for a record of every single
 
 The introduction of Level 2 payments brings the potential for faster and more scalable transaction processing, making it feasible to handle a large volume of low-value transactions in a more space and cost efficient manner.
 
+\subsection{Task Fractalization}
+In the realm of large LLMs, prompt chaining offers a valuable approach to tackling complex problems. 
+By breaking down a problem into smaller subtasks, they can be computed individually, overcoming the limitations of smaller models. 
+An initial prompt is generated to outline the problem, which then spawns a series of subprompts. 
+Instead of completing subtasks sequentially, a network of nodes allows for the parallel computation of subtasks.
+For instance, if the goal is to implement the TCP/IP protocol from scratch, which is too complex for any current LLM to handle, an initial task can outline the individual components, and recursively spawn additional jobs or complete when narrow enough in scope.
+This technique can be applied to various scenarios, such as querying the network for instructions on creating an eCommerce website.
+The initial completion would identify the individual components of an MVC (Model-View-Controller) architecture, such as Users, Products, and Orders.
+Each component would then generate subtasks for implementation, such as user registration, user authentication, and user deletion.
+This would allow for a feasible one-shot approach to complex task completion.
+
+This fractal like approach to task completion has already been implemented in projects such as AutoGPT. 
+However, when run on local language models the time to compute is prohibitively long in some cases, especially on end user hardware which may include smartphones and the like.
+By distributing the computation across a network of nodes, the time to compute can be reduced significantly, making it a viable solution for end users.
+Tasks of almost infinite complexity could be completed in a time effective manner. Each layer of subtasks only adds 1 additonal time step instead of $n$ time steps, where $n$ is the number of subtasks for a given layer.
+
 \section{Immediate Feasibility of Centralized Implementations}
 The implementation of a centralized version of the described network is not only feasible but also highly achievable at present. 
 By adopting a centralized approach, the need for a blockchain infrastructure is eliminated, resulting in a significant reduction in complexity.
@@ -436,8 +447,8 @@ In this centralized version, the network would rely on a trusted moderator, typi
 While the network still plays a role in verification, the central authority assumes the tasks of processing payments and administering appropriate penalties. 
 To ensure transparency and maintain openness, the actions of the central authority can be justified and made accessible to network participants.
 
-Adopting a centralized model addresses several challenges associated with consensus and blockchain implementation. It simplifies the task at hand and eliminates inefficiencies related to duplicate task completion. 
-Additionally, the central authority can serve as a task scheduler, strategically assigning tasks to a select subset of nodes while keeping other nodes free. 
+Adopting a centralized model addresses several challenges associated with consensus and blockchain implementation (e.g. inefficiencies related to duplicate task completion). 
+For example, the central authority can serve as a task scheduler, strategically assigning tasks to the fastest and most reliable nodes first, keeping more nodes free. 
 This approach ensures optimal task allocation, prioritizing faster nodes and balancing workload distribution effectively.
 
 
