@@ -22,11 +22,22 @@ export class Transcation {
 
     /**
      * Calculates the hash of the transcation
+     * @method calculateHash
+     * @description Calculates the hash of the transcation
+     * @returns {Promise.<String>} the hash of the transcation
      */
     calcaluteHash() {
         return new Promise((resolve, reject) => {
             try {
-                const data = JSON.stringify(this);
+                const data = JSON.stringify({
+                    type: this.type,
+                    fromAddress: this.fromAddress,
+                    toAddress: this.toAddress,
+                    amount: this.amount,
+                    fee: this.fee,
+                    timestamp: this.timestamp,
+                    validationScript: this.validationScript
+                });
                 const hash = crypto.createHash('sha256').update(data).digest('hex');
                 resolve(hash)
             } catch(error) {
@@ -37,6 +48,8 @@ export class Transcation {
 
     /**
      * Signs a transcation with a given keypair
+     * @method sign
+     * @description Signs a transcation with a given keypair
      * @param {KeyPair} keyPair
      * @returns {Promise.<null>} 
      */
