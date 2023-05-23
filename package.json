@@ -21,12 +21,15 @@
   },
   "homepage": "https://www.camelidcoin.org/",
   "dependencies": {
+    "@llama-node/cli": "^0.1.5",
     "@llama-node/core": "^0.0.33",
     "@llama-node/llama-cpp": "^0.0.33",
+    "@llama-node/rwkv-cpp": "^0.1.5",
     "base58check": "^2.0.0",
     "bs58check": "^3.0.1",
     "level": "^8.0.0",
     "llama-node": "^0.0.33",
+    "llm": "^0.0.1",
     "winston": "^3.8.2"
   }
 }

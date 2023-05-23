@@ -4,7 +4,7 @@
  */
 import level from 'level';
 import { Block } from './block.js';
-import { Transcation } from './transaction.js';
+import { Transaction } from './transaction.js';
 
 export class Chain {
   /**

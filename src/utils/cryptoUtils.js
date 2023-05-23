@@ -1,8 +1,8 @@
 /**
  * @module CryptoUtils Provides utilities for handling crypto functions
  * **/
-const crypto = require('crypto')
-const bs58check = require('bs58check');
+import crypto from 'crypto';
+import bs58check from 'bs58check';
 
 
 /**

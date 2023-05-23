@@ -1,6 +1,7 @@
 /**
  * @module Model used for managing the LLM model and generating completitions
  * @author Dylan Dunn
+ * @todo Implement CUDA support
  */
 
 import { LLM } from "llama-node";
@@ -8,6 +9,7 @@ import { LLamaRS } from "llama-node/dist/llm/llama-rs.js";
 import path, { resolve } from "path";
 import { Job } from "./job.js";
 import { getRandomInt } from "../utils/random.js";
+import logger from '../utils/logger.js';
 
 /**
  * @class Model
@@ -16,12 +18,14 @@ import { getRandomInt } from "../utils/random.js";
 export class Model {
     /**
      * @constructor
-     * @param {String} modelFile path to the model file 
+     * @param {String} modelFile model file name in /model
      */
     constructor(modelFile) {
         this.model = new LLM(LLamaRS);
+
+        const modelFileLocation = path.resolve(process.cwd(), "./model/" + modelFile);
         const config = {
-            path: path.resolve(process.cwd(), "../model/" + modelFile)
+            path: modelFileLocation,
         };
         this.config = config;
     }
@@ -33,8 +37,14 @@ export class Model {
      */
     init() {
         return new Promise(async (resolve, reject) => {
-            await this.model.load(this.config);
-            resolve()
+            try {
+                logger.debug("Loading model file: " + this.config.path);
+                await this.model.load(this.config);
+                logger.debug("Model loaded successfully");
+                resolve()
+            } catch(error) {
+                reject(new Error("Failed to initialize model: " + error));
+            }
         })
     }
 
@@ -99,7 +109,7 @@ export class Model {
      */
     tokenizeString(input) {
         return new Promise((resolve, reject) => {
-            this.model.tokenize(string).then((tokens) => {
+            this.model.tokenize(input).then((tokens) => {
                 resolve(tokens)
             }).catch((error) => {
                 reject(new Error("Failed to tokenize string: " + error));
