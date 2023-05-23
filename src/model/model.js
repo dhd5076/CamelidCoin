@@ -1,7 +1,10 @@
 /**
  * @module Model used for managing the LLM model and generating completitions
  * @author Dylan Dunn
- * @todo Implement CUDA support
+ * @todo Implement CUDA support, 
+ * This https://llama-node.vercel.app/docs/cuda
+ * has so far been an endless rabbit hole, but is the most promising lead.
+ * May need to implement completition ourselves, especially if we want to define seeds at completion time, and submit tokens as input
  */
 
 import { LLM } from "llama-node";
@@ -122,7 +125,7 @@ export class Model {
      * @todo Adjust prompt type later when determined
      * @description Generate a completition based on a prompt and parameters
      * @param {String} prompt Prompt to use to begin completion
-     * @param {Number} seed Deterministic seeed to use
+     * @param {Number} seed Deterministic seed to use
      * @param {Number} tokens Number of tokens to compute
      */
     generateCompletition(prompt, seed, tokens) {
