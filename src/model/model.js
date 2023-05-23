@@ -142,7 +142,7 @@ export class Model {
                 feedPrompt: true,
             }, (response) => {
                 console.log(completition)
-                if(response.token == '\n\n<end>\n') {
+                if(response.token == '\n\n<end>\n' || count == tokens) {
                     resolve(completition)
                     return;
                 } else{

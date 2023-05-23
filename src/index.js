@@ -21,6 +21,9 @@ client.init()
   client.model.tokenizeString("Hello, world!").then((tokens) => {
     logger.debug(tokens);
   });
+  client.model.generateCompletition("Hello, world!", 101, 10).then((tokens) => { 
+    logger.debug(tokens.join(""));
+  });
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
