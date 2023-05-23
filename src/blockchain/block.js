@@ -30,13 +30,41 @@ export class Block {
 
     /**
      * @method createMerkleProof
-     * @description Creates a merkle proof for a given transaction
-     * @param {String} id the id of the transaction
+     * @description Creates a merkle proof for a given transaction, used to prove that a transaction is in a block for light clients
+     * @param {String} hash the hash of the transaction to prove
      * @returns {Promise.<null, Error>}
      */
     getMerkleProof(id) {
         return new Promise((resolve, reject) => {
-            reject(new Error('Not implemented'));
+          const transactions = this.transactions;
+      
+          const targetTransaction = transactions.find(transaction => transaction.hash === hash);
+      
+          if (!targetTransaction) {
+            reject(new Error('Transaction not found'));
+          }
+      
+            const merkleProof = [];
+    
+            const targetIndex = transactions.findIndex(transaction => transaction.hash === hash);
+    
+            let currentIndex = targetIndex;
+            let currentHash = targetTransaction.hash;
+    
+            while (currentIndex >= 0) {
+            const siblingIndex = currentIndex % 2 === 0 ? currentIndex + 1 : currentIndex - 1;
+            const siblingHash = siblingIndex < transactions.length ? transactions[siblingIndex].hash : currentHash;
+    
+            const concatenatedHash = siblingIndex < currentIndex ? siblingHash + currentHash : currentHash + siblingHash;
+            const hashedValue = SHA256(concatenatedHash).toString();
+    
+            merkleProof.push(siblingHash);
+    
+            currentHash = hashedValue;
+            currentIndex = Math.floor(currentIndex / 2);
+            }
+    
+            resolve(merkleProof);
         });
     }
 
@@ -53,7 +81,7 @@ export class Block {
                 resolve("");
             } 
 
-            let merkleTree = this.transactions.map(transaction => transaction.hash);
+            let merkleTree = transactions.map(transaction => transaction.hash);
 
             while(merkleTree.length > 1) {
                 const nextLevel = [];
