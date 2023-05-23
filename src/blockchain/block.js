@@ -24,7 +24,7 @@ export class Block {
         this.timestamp = timestamp;
         this.transactions = transactions;
         this.nonce = nonce;
-        //this.merkleRoot implement later on to allow lightweight nodes
+        this.merkleRoot = this.calculateMerkleRoot(); //TODO: check for race condition
         this.hash = calculateHash();
     }
 
@@ -47,7 +47,30 @@ export class Block {
      */
     calculateMerkleRoot() {
         return new Promise((resolve, reject) => {
-            reject(new Error('Not implemented'));
+            const transactions = this.transactions;
+
+            if(transactions.length === 0) {
+                resolve("");
+            } 
+
+            let merkleTree = this.transactions.map(transaction => transaction.hash);
+
+            while(merkleTree.length > 1) {
+                const nextLevel = [];
+
+                for(let i = 0; i < merkleTree.length; i += 2) {
+                    const left = merkleTree[i];
+                    const right = merkleTree[i + 1] || left; //In case of odd number of hashes
+                    const concatHash = SHA256(left + right).toString();
+                    nextLevel.push(concatHash);
+                }
+
+                merkleTree = nextLevel;
+            }
+
+            const merkleRoot = merkleTree[0];
+
+            resolve(merkleRoot);
         });
     }
 
