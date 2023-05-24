@@ -46,7 +46,7 @@ export class Job {
                 const job = new Job(input, seed, tokens, JOBSTATE.CREATED, Date.now(), [])
                 resolve(job)
             } catch(error) {
-                reject(error)
+                reject(error);
             }
         })
     }

@@ -31,15 +31,23 @@ client.init()
 
       const job = new Job("Hello, world!", 101, 30, null, Date.now(), tokens)
 
-      client.model.validateSingleToken(job, 10).then((valid) => {
+      client.model.validateSingleToken(job, 0).then((valid) => {
         console.log("Token 0 is valid: " + valid);
       });
 
-      /*client.model.verifyCompletedJob(job).then((valid) => {
+      client.model.validateSingleToken(job, 10).then((valid) => {
+        console.log("Token 10 is valid: " + valid);
+      });
+
+      client.model.validateSingleToken(job, 20).then((valid) => {
+        console.log("Token 20 is valid: " + valid);
+      });
+
+      client.model.verifyCompletedJob(job).then((valid) => {
         logger.debug("Job is valid: " + valid);
       }).catch((error) => {
         throw error;
-      });*/
+      });
     });
   });
   const rl = readline.createInterface({

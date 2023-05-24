@@ -63,7 +63,7 @@ export class Model {
         return new Promise((resolve, reject) => {
             const promises = [
                 //Note: we need to add 1 to the index we need since indexes start at 0
-                this.validateSingleToken(job, job.input.length + 2),
+                this.validateSingleToken(job, 0),
                 //TODO may need to be revised for short inputs/outputs, e.g. < 3/4 tokens
                 this.validateSingleToken(job, getRandomInt(job.input.length + 3, job.input.length + job.output.length - 2)), 
                 this.validateSingleToken(job, job.input.length + job.output.length)
@@ -95,17 +95,16 @@ export class Model {
             const output = job.output;
             const seed = job.seed;
 
-            console.log({
-                input: input,
-                output: output,
-                seed: seed,
-            })
+            const offset = input.length;
 
             //TODO: Check if index calculation is correct, or if it needs to be offset by 1
-            const concatSequence = input.concat(output.join(""));
-            this.generateCompletition(concatSequence.slice(0, index), seed, 1)
+            const concatSequence = input.concat(output.slice(0, index).join(""));
+            this.generateCompletition(concatSequence, seed, 1)
             .then((completition) => {
-                logger.debug('Expecting:' + completition[0] + ' Got:' + concatSequence[index] + ' at index ' + index);
+                console.log("Input:" + concatSequence);
+                console.log("Output: " + completition[0]);
+                console.log('Expecting: ' + output[index]);
+                //logger.debug('Expecting:' + output[index] + ' Got:' + completition[0] + ' at index ' + index);
                 if(completition[0] == concatSequence[index]) {
                     resolve(true);
                 } else {
