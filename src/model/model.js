@@ -57,19 +57,24 @@ export class Model {
      * @method verifyCompletedJob
      * @description Validate a job using the RASTiC method
      * @see RASTiC Method in whitepaper for more information
+     * @todo Optimize this method, several redundancies, but it works for now
      * @param {Job} job Job to validate
      */
     verifyCompletedJob(job) {
         return new Promise((resolve, reject) => {
             const promises = [
-                //Note: we need to add 1 to the index we need since indexes start at 0
                 this.validateSingleToken(job, 0),
-                //TODO may need to be revised for short inputs/outputs, e.g. < 3/4 tokens
-                this.validateSingleToken(job, getRandomInt(job.input.length + 3, job.input.length + job.output.length - 2)), 
-                this.validateSingleToken(job, job.input.length + job.output.length)
+                this.validateSingleToken(job, getRandomInt(1, job.output.length - 2)),  
+                this.validateSingleToken(job, job.output.length - 1)
             ]
 
+            console.log("End token index is : " + (job.output.length - 1));
+            console.log("Output length is : " + job.output.length);
+
             Promise.all(promises).then(([continuity, integrity, truncation]) => {
+                if(job.tokens == job.output.length - 1) {
+                    truncation = true;
+                }
                 if(continuity && integrity && truncation) {
                     resolve(true);
                 } else {
@@ -95,6 +100,7 @@ export class Model {
             this.generateCompletition(concatSequence, job.seed, 1)
             .then((completition) => {
                 if(completition[0] == job.output[index]) {
+                    console.log(completition[0])
                     resolve(true);
                 } else {
                     resolve(false);
@@ -146,11 +152,10 @@ export class Model {
                 seed: seed,
                 feedPrompt: true,
             }, (response) => {
+                completition.push(response.token)
                 if(response.token == '\n\n<end>\n' || count == tokens) {
                     resolve(completition)
                     return;
-                } else{
-                    completition.push(response.token)
                 }
             })  
         })

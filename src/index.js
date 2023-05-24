@@ -23,31 +23,12 @@ client.init()
     logger.debug(tokens);
   });
   client.model.generateCompletition("Hello, world!", 101, 30).then((tokens) => { 
-    const tokensJoined = tokens.join("")
-    const newString = tokens.slice(0, tokens.length - 10).join("");
-    //logger.debug(tokensJoined);
-    client.model.generateCompletition(newString, 101, 10).then((tokens2) => {
-      logger.debug(tokens2.join(""));
+    const job = new Job("Hello, world!", 101, 30, null, Date.now(), tokens);
 
-      const job = new Job("Hello, world!", 101, 30, null, Date.now(), tokens)
-
-      client.model.validateSingleToken(job, 0).then((valid) => {
-        console.log("Token 0 is valid: " + valid);
-      });
-
-      client.model.validateSingleToken(job, 10).then((valid) => {
-        console.log("Token 10 is valid: " + valid);
-      });
-
-      client.model.validateSingleToken(job, 20).then((valid) => {
-        console.log("Token 20 is valid: " + valid);
-      });
-
-      client.model.verifyCompletedJob(job).then((valid) => {
-        logger.debug("Job is valid: " + valid);
-      }).catch((error) => {
-        throw error;
-      });
+    client.model.verifyCompletedJob(job).then((valid) => {
+      logger.debug("Job is valid: " + valid);
+    }).catch((error) => {
+      throw error;
     });
   });
   const rl = readline.createInterface({
