@@ -22,10 +22,14 @@ client.init()
   client.model.tokenizeString("Hello, world!").then((tokens) => {
     logger.debug(tokens);
   });
-  client.model.generateCompletition("Hello, world!", 101, 30).then((tokens) => { 
-    const job = new Job("Hello, world!", 101, 30, null, Date.now(), tokens);
+  console.time("generateCompletition");
+  client.model.generateCompletition("Hello, world!", 101, 1008).then((tokens) => { 
+    console.timeEnd("generateCompletition");
+    const job = new Job("Hello, world!", 101, 1008, null, Date.now(), tokens);
 
+    console.time("verifyCompletedJob");
     client.model.verifyCompletedJob(job).then((valid) => {
+      console.timeEnd("verifyCompletedJob");
       logger.debug("Job is valid: " + valid);
     }).catch((error) => {
       throw error;

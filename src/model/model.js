@@ -66,10 +66,7 @@ export class Model {
                 this.validateSingleToken(job, 0),
                 this.validateSingleToken(job, getRandomInt(1, job.output.length - 2)),  
                 this.validateSingleToken(job, job.output.length - 1)
-            ]
-
-            console.log("End token index is : " + (job.output.length - 1));
-            console.log("Output length is : " + job.output.length);
+            ];
 
             Promise.all(promises).then(([continuity, integrity, truncation]) => {
                 if(job.tokens == job.output.length - 1) {
@@ -95,12 +92,10 @@ export class Model {
      */
     validateSingleToken(job, index) {
         return new Promise((resolve, reject) => {
-
             const concatSequence = job.input.concat(job.output.slice(0, index).join(""));
             this.generateCompletition(concatSequence, job.seed, 1)
             .then((completition) => {
                 if(completition[0] == job.output[index]) {
-                    console.log(completition[0])
                     resolve(true);
                 } else {
                     resolve(false);
@@ -140,7 +135,7 @@ export class Model {
         return new Promise((resolve, reject) => {
             var count = 0;
             var completition = [];
-            this.config.seed = seed;
+            var random  = Math.random()
             this.model.createCompletion({
                 prompt,
                 numPredict: tokens,
