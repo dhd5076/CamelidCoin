@@ -6,6 +6,7 @@
 import readline from 'readline';
 import Client from './networking/client.js'
 import logger from './utils/logger.js';
+import { Job } from './model/job.js';
 
 const client = new Client(25565, [{
   //Mock node for testing
@@ -21,8 +22,25 @@ client.init()
   client.model.tokenizeString("Hello, world!").then((tokens) => {
     logger.debug(tokens);
   });
-  client.model.generateCompletition("Hello, world!", 101, 128).then((tokens) => { 
-    logger.debug(tokens.join(""));
+  client.model.generateCompletition("Hello, world!", 101, 30).then((tokens) => { 
+    const tokensJoined = tokens.join("")
+    const newString = tokens.slice(0, tokens.length - 10).join("");
+    //logger.debug(tokensJoined);
+    client.model.generateCompletition(newString, 101, 10).then((tokens2) => {
+      logger.debug(tokens2.join(""));
+
+      const job = new Job("Hello, world!", 101, 30, null, Date.now(), tokens)
+
+      client.model.validateSingleToken(job, 10).then((valid) => {
+        console.log("Token 0 is valid: " + valid);
+      });
+
+      /*client.model.verifyCompletedJob(job).then((valid) => {
+        logger.debug("Job is valid: " + valid);
+      }).catch((error) => {
+        throw error;
+      });*/
+    });
   });
   const rl = readline.createInterface({
     input: process.stdin,

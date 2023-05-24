@@ -9,7 +9,7 @@
 
 import { LLM } from "llama-node";
 import { LLamaRS } from "llama-node/dist/llm/llama-rs.js";
-import path, { resolve } from "path";
+import path from "path";
 import { Job } from "./job.js";
 import { getRandomInt } from "../utils/random.js";
 import logger from '../utils/logger.js';
@@ -29,6 +29,8 @@ export class Model {
         const modelFileLocation = path.resolve(process.cwd(), "./model/" + modelFile);
         const config = {
             path: modelFileLocation,
+            gpuLayers: 32,
+            useGpu: false
         };
         this.config = config;
     }
@@ -61,17 +63,17 @@ export class Model {
         return new Promise((resolve, reject) => {
             const promises = [
                 //Note: we need to add 1 to the index we need since indexes start at 0
-                this.validateSingleToken(job.input, job.output, job.seed, job.input.length + 2),
+                this.validateSingleToken(job, job.input.length + 2),
                 //TODO may need to be revised for short inputs/outputs, e.g. < 3/4 tokens
-                this.validateSingleToken(job.input, job.output, job.seed, getRandomInt(input.length + 3, input.length + output.length - 2)), 
-                this.validateSingleToken(job.input, job.output, job.seed, job.input.length + job.output.length)
+                this.validateSingleToken(job, getRandomInt(job.input.length + 3, job.input.length + job.output.length - 2)), 
+                this.validateSingleToken(job, job.input.length + job.output.length)
             ]
 
             Promise.all(promises).then(([continuity, integrity, truncation]) => {
                 if(continuity && integrity && truncation) {
                     resolve(true);
                 } else {
-                    reject(false);
+                    resolve(false);
                 }
             }).catch((error) => {
                 reject(error);
@@ -83,25 +85,37 @@ export class Model {
      * @method validateSingleToken
      * @description Validate a single token in a sequence
      * @todo Adjust token type later when determined
-     * @param {String[]} input input token sequence
-     * @param {String[]} output output token sequence
-     * @param {String} seed the generation seed 
+     * @param {Job} input input token sequence
      * @param {Number} index the sequence index to validate
      */
-    validateSingleToken(input, output, seed, index) {
-        //TODO: Check if index calculation is correct, or if it needs to be offset by 1
-        const concatSequence = input.concat(output);
-        this.generateCompletition(concatSequence.slice(0, index), seed, 1)
-        .then((completition) => {
-            if(completition[index] == concatSequence[index]) {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        })
-        .catch((error) => {
-            reject(error);
-        })
+    validateSingleToken(job, index) {
+        return new Promise((resolve, reject) => {
+
+            const input = job.input;
+            const output = job.output;
+            const seed = job.seed;
+
+            console.log({
+                input: input,
+                output: output,
+                seed: seed,
+            })
+
+            //TODO: Check if index calculation is correct, or if it needs to be offset by 1
+            const concatSequence = input.concat(output.join(""));
+            this.generateCompletition(concatSequence.slice(0, index), seed, 1)
+            .then((completition) => {
+                logger.debug('Expecting:' + completition[0] + ' Got:' + concatSequence[index] + ' at index ' + index);
+                if(completition[0] == concatSequence[index]) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch((error) => {
+                reject(new Error("Failed to validate token: " + error));
+            })
+        });
     }
 
     /**
@@ -144,7 +158,6 @@ export class Model {
                 seed: seed,
                 feedPrompt: true,
             }, (response) => {
-                console.log(completition)
                 if(response.token == '\n\n<end>\n' || count == tokens) {
                     resolve(completition)
                     return;

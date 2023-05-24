@@ -2,6 +2,8 @@
  * @module Job used for creating and managing jobs
  */
 
+import { getHash } from "../utils/cryptoUtils.js"
+
 /**
  * @class Job
  */
@@ -65,10 +67,11 @@ export class Job {
     /**
      * Calculates the hash of the job
      * @returns {Promise.<String>} the hash of the job
+     * @todo Implement hashing of proper schema
      */
     calculateHash() {
         return new Promise((resolve, reject) => {  
-            cryptoUtils.hash(JSON.stringify(this))
+            getHash(JSON.stringify(this))
             .then(hash => resolve(hash))
             .catch(error => reject(error));
         })
