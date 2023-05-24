@@ -91,21 +91,10 @@ export class Model {
     validateSingleToken(job, index) {
         return new Promise((resolve, reject) => {
 
-            const input = job.input;
-            const output = job.output;
-            const seed = job.seed;
-
-            const offset = input.length;
-
-            //TODO: Check if index calculation is correct, or if it needs to be offset by 1
-            const concatSequence = input.concat(output.slice(0, index).join(""));
-            this.generateCompletition(concatSequence, seed, 1)
+            const concatSequence = job.input.concat(job.output.slice(0, index).join(""));
+            this.generateCompletition(concatSequence, job.seed, 1)
             .then((completition) => {
-                console.log("Input:" + concatSequence);
-                console.log("Output: " + completition[0]);
-                console.log('Expecting: ' + output[index]);
-                //logger.debug('Expecting:' + output[index] + ' Got:' + completition[0] + ' at index ' + index);
-                if(completition[0] == concatSequence[index]) {
+                if(completition[0] == job.output[index]) {
                     resolve(true);
                 } else {
                     resolve(false);
