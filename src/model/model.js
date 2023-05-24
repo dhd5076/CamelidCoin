@@ -92,10 +92,13 @@ export class Model {
      */
     validateSingleToken(job, index) {
         return new Promise((resolve, reject) => {
+            const random = Math.random();
             const concatSequence = job.input.concat(job.output.slice(0, index).join(""));
+            console.time("generateCompletition" + random)
             this.generateCompletition(concatSequence, job.seed, 1)
             .then((completition) => {
                 if(completition[0] == job.output[index]) {
+                    console.timeEnd("generateCompletition" + random)
                     resolve(true);
                 } else {
                     resolve(false);
@@ -135,7 +138,6 @@ export class Model {
         return new Promise((resolve, reject) => {
             var count = 0;
             var completition = [];
-            var random  = Math.random()
             this.model.createCompletion({
                 prompt,
                 numPredict: tokens,
