@@ -8,10 +8,10 @@
  */
 
 import { LLM } from "llama-node";
-import { LLamaRS } from "llama-node/dist/llm/llama-rs.js";
+import { LLamaCpp } from "llama-node/dist/llm/llama-cpp.js";
 import path from "path";
-import { Job } from "./job.js";
 import { getRandomInt } from "../utils/random.js";
+import { Job } from "./job.js";
 import logger from '../utils/logger.js';
 
 /**
@@ -24,13 +24,21 @@ export class Model {
      * @param {String} modelFile model file name in /model
      */
     constructor(modelFile) {
-        this.model = new LLM(LLamaRS);
+        this.model = new LLM(LLamaCpp);
 
-        const modelFileLocation = path.resolve(process.cwd(), "./model/" + modelFile);
+        const modelFileLocation = '/home/ddunn/Documents/Github/CamelidCoin/model/ggml-alpaca-7b-q4.bin'
         const config = {
             path: modelFileLocation,
-            gpuLayers: 32,
-            useGpu: false
+            enableLogging: true,
+            nCtx: 1024,
+            nParts: -1,
+            seed: 0,
+            f16Kv: false,
+            logitsAll: false,
+            vocabOnly: false,
+            useMlock: false,
+            embedding: false,
+            useMmap: true,
         };
         this.config = config;
     }
@@ -92,20 +100,19 @@ export class Model {
      */
     validateSingleToken(job, index) {
         return new Promise((resolve, reject) => {
-            const random = Math.random();
             const concatSequence = job.input.concat(job.output.slice(0, index).join(""));
-            console.time("generateCompletition" + random)
             this.generateCompletition(concatSequence, job.seed, 1)
             .then((completition) => {
+                console.log(completition);
                 if(completition[0] == job.output[index]) {
-                    console.timeEnd("generateCompletition" + random)
                     resolve(true);
                 } else {
                     resolve(false);
                 }
             })
             .catch((error) => {
-                reject(new Error("Failed to validate token: " + error));
+                console.log("fuck");
+                //reject(new Error("Failed to validate token: " + error));
             })
         });
     }
@@ -139,22 +146,33 @@ export class Model {
             var count = 0;
             var completition = [];
             this.model.createCompletion({
-                prompt,
-                numPredict: tokens,
-                temp: 0.2,
-                topP: 1,
+                nThreads: 16,
+                nTokPredict: tokens,
                 topK: 40,
+                topP: 0.1,
+                temp: 0.2,
                 repeatPenalty: 1,
-                repeatLastN: 64,
-                seed: seed,
-                feedPrompt: true,
+                prompt,
             }, (response) => {
                 completition.push(response.token)
-                if(response.token == '\n\n<end>\n' || count == tokens) {
+                console.log(response.token)
+                if(response.completed || count == tokens) {
                     resolve(completition)
                     return;
                 }
-            })  
+            }).catch((error) => {
+                /**
+                 * I dont't know why is an error,
+                 * an issue has been opened on the original document
+                 * It always errors out for 'Too many tokens predicted
+                 * This is a hack in the meantime
+                 */
+                if(error.message == "Too many tokens predicted") {
+                    resolve(completition)
+                } else {
+                    reject(new Error("Failed to generate completition: " + error));
+                }
+            });  
         })
     }
 }

@@ -14,18 +14,29 @@ const client = new Client(25565, [{
   port: '25565'
 }], true, 'ggml-alpaca-7b-q4.bin');
 
+/**TODO: Will probably need to write a custom llama.cpp equivalent.
+ * It's not structured appopriately for our use case.
+ * Loading the prompt and model in and out of memory is not efficient
+ **/
+
 
 logger.debug("Starting...");
 
 client.init()
 .then(() => {
+  /**
+   * TODO: fix new errors with tokenize method
   client.model.tokenizeString("Hello, world!").then((tokens) => {
     logger.debug(tokens);
   });
+  **/
+
   console.time("generateCompletition");
-  client.model.generateCompletition("Hello, world!", 101, 1008).then((tokens) => { 
+  const prompt = "100 word essay: "
+  client.model.generateCompletition(prompt, 101, 120).then((tokens) => { 
     console.timeEnd("generateCompletition");
-    const job = new Job("Hello, world!", 101, 1008, null, Date.now(), tokens);
+    console.log(tokens);
+    const job = new Job(prompt, 101, 100, null, Date.now(), tokens);
 
     console.time("verifyCompletedJob");
     client.model.verifyCompletedJob(job).then((valid) => {
@@ -39,11 +50,4 @@ client.init()
     input: process.stdin,
     output: process.stdout
   });
-  
-  
-  //BASIC READ PRINT EXECUTE cycle for testing, will be made more robust later
-  const prompt = () => {
-  };
-  prompt();
-
 })
