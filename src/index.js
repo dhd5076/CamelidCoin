@@ -31,13 +31,11 @@ client.init()
   });
   **/
 
-  console.time("generateCompletition");
-  const prompt = "100 word essay: "
-  client.model.generateCompletition(prompt, 101, 120).then((tokens) => { 
-    console.timeEnd("generateCompletition");
-    console.log(tokens);
+  const prompt = "1000 word essay: "
+  console.time("generateCompletition")
+  client.model.generateCompletition(prompt, 101, 256).then((tokens) => { 
     const job = new Job(prompt, 101, 100, null, Date.now(), tokens);
-
+    console.timeEnd("generateCompletition");
     console.time("verifyCompletedJob");
     client.model.verifyCompletedJob(job).then((valid) => {
       console.timeEnd("verifyCompletedJob");

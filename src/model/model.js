@@ -26,12 +26,11 @@ export class Model {
     constructor(modelFile) {
         this.model = new LLM(LLamaCpp);
 
-        const modelFileLocation = '/home/ddunn/Documents/Github/CamelidCoin/model/ggml-alpaca-7b-q4.bin'
+        const modelFileLocation = path.resolve(process.cwd() + '/model/ggml-vic7b-q5_1.bin');
         const config = {
-            path: modelFileLocation,
-            enableLogging: true,
+            modelPath: modelFileLocation,
+            enableLogging: false,
             nCtx: 1024,
-            nParts: -1,
             seed: 0,
             f16Kv: false,
             logitsAll: false,
@@ -39,6 +38,7 @@ export class Model {
             useMlock: false,
             embedding: false,
             useMmap: true,
+            nGpuLayers: 32
         };
         this.config = config;
     }
@@ -73,10 +73,10 @@ export class Model {
             const promises = [
                 this.validateSingleToken(job, 0),
                 this.validateSingleToken(job, getRandomInt(1, job.output.length - 2)),  
-                this.validateSingleToken(job, job.output.length - 1)
+                this.validateSingleToken(job, job.output.length - 1),
             ];
-
             Promise.all(promises).then(([continuity, integrity, truncation]) => {
+                console.log(continuity, integrity, truncation);
                 if(job.tokens == job.output.length - 1) {
                     truncation = true;
                 }
@@ -103,7 +103,6 @@ export class Model {
             const concatSequence = job.input.concat(job.output.slice(0, index).join(""));
             this.generateCompletition(concatSequence, job.seed, 1)
             .then((completition) => {
-                console.log(completition);
                 if(completition[0] == job.output[index]) {
                     resolve(true);
                 } else {
@@ -111,8 +110,7 @@ export class Model {
                 }
             })
             .catch((error) => {
-                console.log("fuck");
-                //reject(new Error("Failed to validate token: " + error));
+                reject(new Error("Failed to validate token: " + error));
             })
         });
     }
@@ -146,7 +144,7 @@ export class Model {
             var count = 0;
             var completition = [];
             this.model.createCompletion({
-                nThreads: 16,
+                nThreads: 8,
                 nTokPredict: tokens,
                 topK: 40,
                 topP: 0.1,
@@ -154,24 +152,14 @@ export class Model {
                 repeatPenalty: 1,
                 prompt,
             }, (response) => {
-                completition.push(response.token)
-                console.log(response.token)
-                if(response.completed || count == tokens) {
+                completition.push(response.token);
+                count++;
+                if(response.token == '\n\n<end>\n' || count == tokens) {
                     resolve(completition)
                     return;
                 }
             }).catch((error) => {
-                /**
-                 * I dont't know why is an error,
-                 * an issue has been opened on the original document
-                 * It always errors out for 'Too many tokens predicted
-                 * This is a hack in the meantime
-                 */
-                if(error.message == "Too many tokens predicted") {
-                    resolve(completition)
-                } else {
-                    reject(new Error("Failed to generate completition: " + error));
-                }
+                reject(new Error("Failed to generate completition: " + error));
             });  
         })
     }
