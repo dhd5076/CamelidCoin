@@ -7,6 +7,7 @@
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{float}
+\usepackage{pgfplots}  
 
 \newcommand{\Function}[2]{\textbf{function}\ \textsc{#1}(#2)}
 
@@ -279,6 +280,17 @@ If we choose 3 random indices in each sequence, the probability that the numbers
 \end{align*}
 
 Therefore, the chances of a false positive in \ac{RASTiC} are extremely low, even with a smaller vocabulary size such as with GPT-2.
+
+\begin{figure}[h]
+    \caption{A comparison of the time required to verify a message using \ac{RASTiC} versus the time required to generate the message.}
+    \centering
+    \includegraphics[width=1.0\textwidth]{comparison.png}\par
+    \label{fig:comparison}
+\end{figure}
+
+As you can see in figure \ref{fig:comparison}, the time required to verify a message using \ac{RASTiC} is significantly less than the time required to generate the message in most cases. 
+In this example, we can see that \ac{RASTiC} is actually slower when verifying messages with fewer than 10 tokens. This is due to the need to tokenize and reload the message into VRAM multiple times.
+This can be eliminated with custom code, but there aren't libraries with enough flexibility to support this at the moment.
 
 \subsubsection{Rationale}
 Sample a subset of the data.

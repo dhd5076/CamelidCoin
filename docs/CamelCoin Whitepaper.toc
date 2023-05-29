@@ -17,21 +17,21 @@
 \contentsline {subsubsection}{\numberline {2.5.2}Implementation and Methodology}{8}{}%
 \contentsline {subsubsection}{\numberline {2.5.3}Outsourced Verification}{8}{}%
 \contentsline {subsubsection}{\numberline {2.5.4}Evaluation}{9}{}%
-\contentsline {subsubsection}{\numberline {2.5.5}Rationale}{9}{}%
-\contentsline {subsection}{\numberline {2.6}Model}{10}{}%
-\contentsline {subsubsection}{\numberline {2.6.1}Distribution}{10}{}%
-\contentsline {section}{\numberline {3}Key Benefits}{11}{}%
-\contentsline {subsection}{\numberline {3.1}Censorship-Proof}{11}{}%
+\contentsline {subsubsection}{\numberline {2.5.5}Rationale}{10}{}%
+\contentsline {subsection}{\numberline {2.6}Model}{11}{}%
+\contentsline {subsubsection}{\numberline {2.6.1}Distribution}{11}{}%
+\contentsline {section}{\numberline {3}Key Benefits}{12}{}%
+\contentsline {subsection}{\numberline {3.1}Censorship-Proof}{12}{}%
 \contentsline {subsection}{\numberline {3.2}Concurrent Inference}{12}{}%
 \contentsline {section}{\numberline {4}Challenges and Limitations}{12}{}%
 \contentsline {subsection}{\numberline {4.1}Privacy}{12}{}%
-\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{12}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{13}{}%
 \contentsline {subsection}{\numberline {4.2}Inefficient Delegation}{13}{}%
-\contentsline {section}{\numberline {5}Future Aspirations}{13}{}%
-\contentsline {subsection}{\numberline {5.1}Distributed Training}{13}{}%
-\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{13}{}%
+\contentsline {section}{\numberline {5}Future Aspirations}{14}{}%
+\contentsline {subsection}{\numberline {5.1}Distributed Training}{14}{}%
+\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{14}{}%
 \contentsline {subsection}{\numberline {5.2}Proof Of Stake}{14}{}%
 \contentsline {subsection}{\numberline {5.3}Level 2 Payments}{14}{}%
-\contentsline {subsection}{\numberline {5.4}Task Fractalization}{14}{}%
+\contentsline {subsection}{\numberline {5.4}Task Fractalization}{15}{}%
 \contentsline {section}{\numberline {6}Immediate Feasibility of Centralized Implementations}{15}{}%
-\contentsline {section}{\numberline {7}Closing Statements}{15}{}%
+\contentsline {section}{\numberline {7}Closing Statements}{16}{}%

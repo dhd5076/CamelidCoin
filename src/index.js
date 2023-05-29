@@ -31,11 +31,12 @@ client.init()
   });
   **/
 
-  const prompt = "1000 word essay: "
+  const prompt = "Write a 1000 word essay about giraffes: "
   console.time("generateCompletition")
-  client.model.generateCompletition(prompt, 101, 256).then((tokens) => { 
+  client.model.generateCompletition(prompt, 101, 2000).then((tokens) => { 
     const job = new Job(prompt, 101, 100, null, Date.now(), tokens);
     console.timeEnd("generateCompletition");
+    console.log(tokens.join(""));
     console.time("verifyCompletedJob");
     client.model.verifyCompletedJob(job).then((valid) => {
       console.timeEnd("verifyCompletedJob");
