@@ -268,7 +268,7 @@ Full nodes are responsible for completing the validation process as it ensures t
 The client will not receive any free computation, as only the hash of the single token completion is returned. 
 This mechanism prevents clients from attempting to obtain free completions by sending verification requests one token at a time.
 
-\subsubsection{Evaluation}
+\subsubsection{Performance Evaluation}
 
 The chances of a false positive using \ac{RASTiC} can be calculated as follows. 
 Suppose we have two sequences of numbers, each with 50,257 tokens (e.g., using GPT-2 as an example). 
@@ -281,7 +281,7 @@ If we choose 3 random indices in each sequence, the probability that the numbers
 
 Therefore, the chances of a false positive in \ac{RASTiC} are extremely low, even with a smaller vocabulary size such as with GPT-2.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \caption{A comparison of the time required to verify a message using \ac{RASTiC} versus the time required to generate the message.}
     \centering
     \includegraphics[width=1.0\textwidth]{comparison.png}\par
@@ -289,23 +289,43 @@ Therefore, the chances of a false positive in \ac{RASTiC} are extremely low, eve
 \end{figure}
 
 As you can see in figure \ref{fig:comparison}, the time required to verify a message using \ac{RASTiC} is significantly less than the time required to generate the message in most cases. 
-In this example, we can see that \ac{RASTiC} is actually slower when verifying messages with fewer than 10 tokens. This is due to the need to tokenize and reload the message into VRAM multiple times.
-This can be eliminated with custom code, but there aren't libraries with enough flexibility to support this at the moment.
+However, we can see that \ac{RASTiC} is actually slower when verifying messages with fewer than 10 tokens. This is due to the need to tokenize and reload the message into VRAM multiple times.
+Custom code could potentially address this issue, but the current lack of libraries with sufficient flexibility hinders such optimizations. 
+Future developments should focus on advancing libraries to support these requirements and enhance \ac{RASTiC}'s overall performance.
+
+\subsubsection{Performance Analysis and Economic Viability}
+
+\paragraph{Enhanced Processing Speeds and GPU Offloading:}
+For our testing, we observed greatly increased processing speeds by offloading some layers to the GPU, leveraging the recent innovation of the llama.cpp library. 
+This enhancement allowed us to achieve up to 30 tokens per second, even after accounting for overhead. 
+Extrapolating these results, we can generate approximately 39,600 tokens per hour under 100\% task saturation.
+
+\paragraph{Cost Analysis and Future Cost Reductions:}
+To evaluate the economic viability, we considered the world average cost of electricity, which amounts to \$0.17 per kilowatt hour. 
+With a measured average power draw of 312 watts, we calculated the average cost to generate 1000 tokens to be \$0.00134. 
+This cost compares favorably to commercial offerings, particularly when considering that certain open-source models approach up to 90\% of the accuracy achieved by OpenAI's GPT models. 
+With the adoption of our protocol by users employing specialized and/or dedicated hardware, we anticipate further price reductions, especially as technological innovations continue to improve computation efficiency.
+
+\paragraph{Economic Viability and Conclusion:}
+In conclusion, our economic analysis demonstrates the viability of our protocol at a high level. 
+The competitive cost per token, combined with the potential for cost reductions and increased demand through hardware adoption and distributed training, establishes a strong foundation for our protocol's economic feasibility. 
+Furthermore, the added advantages of privacy and an uncensored user experience further contribute to its value proposition. 
+Future developments and advancements in our protocol should solidify its position as a promising solution for efficient LLM generation, training, and verification.
 
 \subsubsection{Rationale}
 Sample a subset of the data.
 Test for continuity, integrity, and truncation:
 \begin{itemize}
-    \item Continuity: Ensure that the output is connected to the input. This prevents a case where the output is generated, but is unrelated to the input. 
+    \item \textbf{Continuity:} Ensure that the output is connected to the input. This prevents a case where the output is generated, but is unrelated to the input. 
     This would produce a message where the linkage of tokens is relatively connected, but would be broken at the intersection of the input and output token arrays.
-    \item Integrity: Randomly test the interior tokens. 
+    \item \textbf{Integrity:} Randomly test the interior tokens. 
     Since any one token can be tested it enforces the content of the message to not only be genuinely generated, but also ensures that it hasn't been tampered with since tampering would break every token after it.
-    \item Truncation: Ensure that the message has not been truncated. Ensure that an $\langle$end$\rangle$ token has been reached and that the compute note did not prematurely truncate the completion.
+    \item \textbf{Truncation:} Ensure that the message has not been truncated. Ensure that an $\langle$end$\rangle$ token has been reached and that the compute note did not prematurely truncate the completion.
 \end{itemize}
  With these tests, we can be fairly sure of the integrity of the entire output.
 
 
-\subsubsection*{Potential Attacks and Exploits}
+\subsubsection{Potential Attacks and Exploits}
 
 There are a couple of exploits that we can foresee being used to bypass the algorithm.
 

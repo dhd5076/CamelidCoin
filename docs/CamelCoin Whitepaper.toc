@@ -7,31 +7,36 @@
 \contentsline {subsection}{\numberline {2.2}Wallet}{4}{}%
 \contentsline {subsubsection}{\numberline {2.2.1}Keypair Creation}{4}{}%
 \contentsline {subsubsection}{\numberline {2.2.2}Public Address Generation}{4}{}%
-\contentsline {subsection}{\numberline {2.3}Transaction}{4}{}%
+\contentsline {subsection}{\numberline {2.3}Transaction}{5}{}%
 \contentsline {subsubsection}{\numberline {2.3.1}Proof of Work}{5}{}%
 \contentsline {subsection}{\numberline {2.4}Jobs}{6}{}%
-\contentsline {subsubsection}{\numberline {2.4.1}Job Pool}{6}{}%
+\contentsline {subsubsection}{\numberline {2.4.1}Job Pool}{7}{}%
 \contentsline {subsubsection}{\numberline {2.4.2}Dispute Resolution}{7}{}%
-\contentsline {subsection}{\numberline {2.5}\ac {RASTiC} (Random Autoregressive Subsampling for Token Integrity Checking)}{7}{}%
-\contentsline {subsubsection}{\numberline {2.5.1}Problem Statement and Motivation}{7}{}%
+\contentsline {subsection}{\numberline {2.5}\ac {RASTiC} (Random Autoregressive Subsampling for Token Integrity Checking)}{8}{}%
+\contentsline {subsubsection}{\numberline {2.5.1}Problem Statement and Motivation}{8}{}%
 \contentsline {subsubsection}{\numberline {2.5.2}Implementation and Methodology}{8}{}%
 \contentsline {subsubsection}{\numberline {2.5.3}Outsourced Verification}{8}{}%
-\contentsline {subsubsection}{\numberline {2.5.4}Evaluation}{9}{}%
-\contentsline {subsubsection}{\numberline {2.5.5}Rationale}{10}{}%
-\contentsline {subsection}{\numberline {2.6}Model}{11}{}%
-\contentsline {subsubsection}{\numberline {2.6.1}Distribution}{11}{}%
-\contentsline {section}{\numberline {3}Key Benefits}{12}{}%
-\contentsline {subsection}{\numberline {3.1}Censorship-Proof}{12}{}%
-\contentsline {subsection}{\numberline {3.2}Concurrent Inference}{12}{}%
-\contentsline {section}{\numberline {4}Challenges and Limitations}{12}{}%
-\contentsline {subsection}{\numberline {4.1}Privacy}{12}{}%
-\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{13}{}%
-\contentsline {subsection}{\numberline {4.2}Inefficient Delegation}{13}{}%
-\contentsline {section}{\numberline {5}Future Aspirations}{14}{}%
-\contentsline {subsection}{\numberline {5.1}Distributed Training}{14}{}%
-\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{14}{}%
-\contentsline {subsection}{\numberline {5.2}Proof Of Stake}{14}{}%
-\contentsline {subsection}{\numberline {5.3}Level 2 Payments}{14}{}%
-\contentsline {subsection}{\numberline {5.4}Task Fractalization}{15}{}%
-\contentsline {section}{\numberline {6}Immediate Feasibility of Centralized Implementations}{15}{}%
-\contentsline {section}{\numberline {7}Closing Statements}{16}{}%
+\contentsline {subsubsection}{\numberline {2.5.4}Performance Evaluation}{9}{}%
+\contentsline {subsubsection}{\numberline {2.5.5}Performance Analysis and Economic Viability}{10}{}%
+\contentsline {paragraph}{Enhanced Processing Speeds and GPU Offloading:}{10}{}%
+\contentsline {paragraph}{Cost Analysis and Future Cost Reductions:}{10}{}%
+\contentsline {paragraph}{Economic Viability and Conclusion:}{11}{}%
+\contentsline {subsubsection}{\numberline {2.5.6}Rationale}{11}{}%
+\contentsline {subsubsection}{\numberline {2.5.7}Potential Attacks and Exploits}{11}{}%
+\contentsline {subsection}{\numberline {2.6}Model}{12}{}%
+\contentsline {subsubsection}{\numberline {2.6.1}Distribution}{12}{}%
+\contentsline {section}{\numberline {3}Key Benefits}{13}{}%
+\contentsline {subsection}{\numberline {3.1}Censorship-Proof}{13}{}%
+\contentsline {subsection}{\numberline {3.2}Concurrent Inference}{13}{}%
+\contentsline {section}{\numberline {4}Challenges and Limitations}{14}{}%
+\contentsline {subsection}{\numberline {4.1}Privacy}{14}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{14}{}%
+\contentsline {subsection}{\numberline {4.2}Inefficient Delegation}{15}{}%
+\contentsline {section}{\numberline {5}Future Aspirations}{15}{}%
+\contentsline {subsection}{\numberline {5.1}Distributed Training}{15}{}%
+\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{15}{}%
+\contentsline {subsection}{\numberline {5.2}Proof Of Stake}{15}{}%
+\contentsline {subsection}{\numberline {5.3}Level 2 Payments}{16}{}%
+\contentsline {subsection}{\numberline {5.4}Task Fractalization}{16}{}%
+\contentsline {section}{\numberline {6}Immediate Feasibility of Centralized Implementations}{17}{}%
+\contentsline {section}{\numberline {7}Closing Statements}{17}{}%
