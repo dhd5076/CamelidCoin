@@ -17,7 +17,7 @@
 \contentsline {subsubsection}{\numberline {2.5.2}Implementation and Methodology}{8}{}%
 \contentsline {subsubsection}{\numberline {2.5.3}Outsourced Verification}{8}{}%
 \contentsline {subsubsection}{\numberline {2.5.4}Performance Evaluation}{9}{}%
-\contentsline {subsubsection}{\numberline {2.5.5}Performance Analysis and Economic Viability}{10}{}%
+\contentsline {subsubsection}{\numberline {2.5.5}Economic Viability}{10}{}%
 \contentsline {paragraph}{Enhanced Processing Speeds and GPU Offloading:}{10}{}%
 \contentsline {paragraph}{Cost Analysis and Future Cost Reductions:}{10}{}%
 \contentsline {paragraph}{Economic Viability and Conclusion:}{11}{}%
