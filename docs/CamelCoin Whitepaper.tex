@@ -272,7 +272,7 @@ This mechanism prevents clients from attempting to obtain free completions by se
 
 The chances of a false positive using \ac{RASTiC} can be calculated as follows. 
 Suppose we have a sequences of tokens, each with 50,257 possible tokens (e.g., using GPT-2 as an example). 
-If we choose 3 random indices in each sequence, the probability that the numbers match at all 3 indices is:
+If we verify 3 random indices in the Sequence, the probability that the numbers match at all 3 indices is:
 
 \begin{align*}
 \text{Probability of a match} &= \frac{1}{50,257^3} \
