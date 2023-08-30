@@ -24,19 +24,19 @@
 \contentsline {subsubsection}{\numberline {2.5.6}Rationale}{11}{}%
 \contentsline {subsubsection}{\numberline {2.5.7}Potential Attacks and Exploits}{11}{}%
 \contentsline {subsection}{\numberline {2.6}Model}{12}{}%
-\contentsline {subsubsection}{\numberline {2.6.1}Distribution}{12}{}%
+\contentsline {subsubsection}{\numberline {2.6.1}Distribution}{13}{}%
 \contentsline {section}{\numberline {3}Key Benefits}{13}{}%
 \contentsline {subsection}{\numberline {3.1}Censorship-Proof}{13}{}%
-\contentsline {subsection}{\numberline {3.2}Concurrent Inference}{13}{}%
+\contentsline {subsection}{\numberline {3.2}Concurrent Inference}{14}{}%
 \contentsline {section}{\numberline {4}Challenges and Limitations}{14}{}%
 \contentsline {subsection}{\numberline {4.1}Privacy}{14}{}%
-\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{14}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}Homomorphic Encryption}{15}{}%
 \contentsline {subsection}{\numberline {4.2}Inefficient Delegation}{15}{}%
 \contentsline {section}{\numberline {5}Future Aspirations}{15}{}%
 \contentsline {subsection}{\numberline {5.1}Distributed Training}{15}{}%
-\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{15}{}%
-\contentsline {subsection}{\numberline {5.2}Proof Of Stake}{15}{}%
+\contentsline {subsubsection}{\numberline {5.1.1}Federated Averaging}{16}{}%
+\contentsline {subsection}{\numberline {5.2}Proof Of Stake}{16}{}%
 \contentsline {subsection}{\numberline {5.3}Level 2 Payments}{16}{}%
-\contentsline {subsection}{\numberline {5.4}Task Fractalization}{16}{}%
+\contentsline {subsection}{\numberline {5.4}Task Fractalization}{17}{}%
 \contentsline {section}{\numberline {6}Immediate Feasibility of Centralized Implementations}{17}{}%
-\contentsline {section}{\numberline {7}Closing Statements}{17}{}%
+\contentsline {section}{\numberline {7}Closing Statements}{18}{}%

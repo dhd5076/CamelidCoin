@@ -21,7 +21,7 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=0.5\textwidth]{logoLarge.png}\par\vspace{.5cm}
-    {\small Revision 1.1.0 \\}
+    {\small Revision 1.1.2 \\}
     \vspace{1cm}
     {\fontsize{24.88}{48}\selectfont\scshape CamelidCoin\par}
     \vspace{1cm}
@@ -339,6 +339,14 @@ There are a couple of exploits that we can foresee being used to bypass the algo
     However, the node would need to be able to do this more than 51\% of the time or would lose money through slashed stakes.
     \item \textbf{Inference:} Theoretically, because of the limited vocabulary of everyday inputs, lazy prediction algorithms could be used to predict words without use of the official model.
      But, if the node were able to do this effectively enough, this is but an evolution of the network since it would need to be right at least 51\% of the time as not to lose money.
+     \item \textbf{Single Token Substitution:} To provide clarity, our testing centers on determining whether significant computational effort was employed in generating the predominant response. 
+     This verification approach, however, doesn't offer absolute immunity against single-token substitutions attempted through brute force. 
+     Conceivably, a malicious actor could, given sufficient time, alter a single token within the response using brute force. Nevertheless, executing such an endeavor demands substantial resources without any evident financial gain. Our current verification capabilities encompass confirming the utilization of substantial computational resources, in conjunction with the correct model and seed. 
+     While the likelihood of this being a concern is minimal, as generating an incorrect response takes longer and elementary substitutions are detectable, we acknowledge it. 
+     In most instances, another node will preemptively produce the accurate answer, thereby deterring malicious actions that entail substantial resource investment and risk to staked tokens.
+     In an unlikely scenario, a malicious actor could potentially generate a fraction of a response, introduce a random token, and persistently generate the remainder of the response. 
+     Detecting such a substitution's occurrence presents odds of 3 in N, where N represents the response's length.
+    We could also expect that such a response, if detected by a user, could be flagged for further verification given the financial incentive to do so.
 \end{enumerate}
 
 \subsection{Model}
