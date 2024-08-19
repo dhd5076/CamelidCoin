@@ -3,7 +3,7 @@
 
 *This repository is still a work in progress, but the protocol has been detailed in the whitepaper.*
 
-Read the whitepaper here: [CamelidCoin Whitepaper](https://www.camelidcoin.org/whitepaper.pdf)
+Read the whitepaper here: [CamelidCoin Whitepaper](https://github.com/dhd5076/camelidcoin.org/blob/main/public/whitepaper.pdf)
 
 Discord: https://discord.gg/Uv3v5pJZQr
 
